@@ -1,0 +1,37 @@
+.appContainer {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.mainContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  backdrop-filter: blur(8px);
+  opacity: 0.95;
+}
+
+@supports (backdrop-filter: blur(8px)) {
+  .header {
+    background-color: rgb(var(--color-background) / 0.6);
+  }
+}
+
+.headerContent {
+  display: flex;
+  height: 3.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+}
+
+.mainContent {
+  flex: 1;
+  overflow: auto;
+}
