@@ -2,51 +2,62 @@ import { Card, CardContent } from "./ui/card"
 import { ExternalLink } from "lucide-react"
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useEffect, useState } from 'react'
 import styles from './TaskCard.module.css'
+import { Task } from '../types/blockchain'
+import { getAllProtocols } from '../utils/blockchain'
 
-type BlockchainProtocol = 'ethereum' | 'bitcoin' | 'solana' | 'polygon' | 'arbitrum' | 'optimism' | 'avalanche' | 'bsc'
+const protocolConfig = getAllProtocols()
 
-interface Task {
-  id: string
-  title: string
-  description: string
-  status: 'backlog' | 'todo' | 'doing' | 'done'
-  protocol: BlockchainProtocol
-  color: string
-  externalLink?: string
-}
+// Water drop sound generation
+const playWaterDropSound = () => {
+  const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
 
-const protocolConfig = {
-  ethereum: { name: 'Ethereum', color: 'bg-blue-50 border-blue-500', brandColor: '#627EEA' },
-  bitcoin: { name: 'Bitcoin', color: 'bg-orange-50 border-orange-500', brandColor: '#F7931A' },
-  solana: { name: 'Solana', color: 'bg-purple-50 border-purple-500', brandColor: '#9945FF' },
-  polygon: { name: 'Polygon', color: 'bg-violet-50 border-violet-500', brandColor: '#8247E5' },
-  arbitrum: { name: 'Arbitrum', color: 'bg-blue-50 border-blue-600', brandColor: '#28A0F0' },
-  optimism: { name: 'Optimism', color: 'bg-red-50 border-red-500', brandColor: '#FF0420' },
-  avalanche: { name: 'Avalanche', color: 'bg-red-50 border-red-600', brandColor: '#E84142' },
-  bsc: { name: 'BSC', color: 'bg-yellow-50 border-yellow-500', brandColor: '#F3BA2F' }
+  // Create a quick water drop sound effect
+  const oscillator = audioContext.createOscillator()
+  const gainNode = audioContext.createGain()
+
+  oscillator.connect(gainNode)
+  gainNode.connect(audioContext.destination)
+
+  // Water drop frequency sweep
+  oscillator.frequency.setValueAtTime(800, audioContext.currentTime)
+  oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.3)
+
+  // Volume envelope for natural sound
+  gainNode.gain.setValueAtTime(0, audioContext.currentTime)
+  gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01)
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3)
+
+  oscillator.type = 'sine'
+  oscillator.start(audioContext.currentTime)
+  oscillator.stop(audioContext.currentTime + 0.3)
 }
 
 interface TaskCardProps {
-  task: Task
+  task: Task & { color: string }
   onEdit?: (task: Task) => void
 }
 
-const getProtocolClass = (protocol: BlockchainProtocol) => {
-  const protocolMap: { [key in BlockchainProtocol]: string } = {
-    ethereum: styles.colorEthereum || styles.colorBlue,
-    bitcoin: styles.colorBitcoin || styles.colorOrange,
-    solana: styles.colorSolana || styles.colorPurple,
-    polygon: styles.colorPolygon || styles.colorViolet,
-    arbitrum: styles.colorArbitrum || styles.colorBlue,
-    optimism: styles.colorOptimism || styles.colorRed,
-    avalanche: styles.colorAvalanche || styles.colorRed,
-    bsc: styles.colorBsc || styles.colorYellow,
+const getProtocolClass = (protocol: string) => {
+  // Dynamic protocol class mapping based on available protocols
+  const classMap: Record<string, string> = {
+    'Suilend': styles.colorGreen || styles.colorBlue,
+    'Cetus': styles.colorIndigo || styles.colorPurple,
+    'Haedal': styles.colorRed || styles.colorRed,
+    'Bluefin': styles.colorBlue || styles.colorBlue,
+    'Momentum': styles.colorYellow || styles.colorYellow,
+    'Scallop': styles.colorTeal || styles.colorGreen,
+    'Kriya': styles.colorPink || styles.colorPurple,
+    // Add more protocols as needed
   }
-  return protocolMap[protocol] || styles.colorGray
+  return classMap[protocol] || styles.colorGray
 }
 
 export function TaskCard({ task, onEdit }: TaskCardProps) {
+  const [isCompleted, setIsCompleted] = useState(task.status === 'done')
+  const [previousStatus, setPreviousStatus] = useState(task.status)
+
   const {
     attributes,
     listeners,
@@ -54,14 +65,34 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ 
+  } = useSortable({
     id: task.id,
     data: {
       type: 'task',
       task
     }
   })
-  
+
+  // Handle completion state when task status changes
+  useEffect(() => {
+    if (task.status === 'done' && previousStatus !== 'done') {
+      setIsCompleted(true)
+
+      // Play water drop sound
+      try {
+        playWaterDropSound()
+      } catch (error) {
+        console.log('Audio not available:', error)
+      }
+    }
+
+    if (task.status !== 'done') {
+      setIsCompleted(false)
+    }
+
+    setPreviousStatus(task.status)
+  }, [task.status, previousStatus])
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -83,34 +114,77 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
     onEdit?.(task)
   }
 
+  const protocol = protocolConfig[task.protocol]
+  
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return null
+    const date = new Date(dateString)
+    return date.toLocaleDateString('ko-KR', { 
+      month: 'short', 
+      day: 'numeric' 
+    })
+  }
+
   return (
-    <div 
+    <div
       ref={setNodeRef}
       style={style}
-      className={`${styles.taskCard} ${getProtocolClass(task.protocol)}`}
+      className={`${styles.taskCard} ${getProtocolClass(task.protocol)} ${
+        isCompleted ? styles.completed : ''
+      }`}
       onClick={handleCardClick}
       data-dragging={isDragging}
+      data-completed={isCompleted}
       {...attributes}
       {...listeners}
     >
-      <Card className={styles.cardWrapper}>
-        <CardContent className={styles.cardContent}>
-          {task.externalLink && (
-            <button
-              onClick={handleLinkClick}
-              className={styles.linkButton}
-            >
-              <ExternalLink className={styles.linkIcon} />
-            </button>
-          )}
-          <div className={styles.taskContent}>
+      <div className={styles.cardContent}>
+        {/* Header with protocol logo, title and external link */}
+        <div className={styles.cardHeader}>
+          <div className={styles.titleSection}>
+            <div className={styles.protocolLogo}>
+              <img
+                src={protocol.icon}
+                alt={`${protocol.name} logo`}
+                className={styles.protocolIcon}
+              />
+            </div>
             <h4 className={styles.taskTitle}>{task.title}</h4>
-            {task.description && (
-              <p className={styles.taskDescription}>{task.description}</p>
+          </div>
+          <button
+            onClick={handleLinkClick}
+            className={styles.linkButton}
+          >
+            <ExternalLink className={styles.linkIcon} />
+          </button>
+        </div>
+
+        {/* Task content */}
+        <div className={styles.taskContent}>
+          {task.description && (
+            <p className={styles.taskDescription}>{task.description}</p>
+          )}
+        </div>
+
+        {/* Date range footer */}
+        {(task.startDate || task.endDate) && (
+          <div className={styles.dateRange}>
+            {task.startDate && (
+              <span className={styles.startDate}>
+                {formatDate(task.startDate)}
+              </span>
+            )}
+            {task.startDate && task.endDate && (
+              <span className={styles.dateSeparator}>→</span>
+            )}
+            {task.endDate && (
+              <span className={styles.endDate}>
+                {formatDate(task.endDate)}
+              </span>
             )}
           </div>
-        </CardContent>
-      </Card>
+        )}
+      </div>
     </div>
   )
 }

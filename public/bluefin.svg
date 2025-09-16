@@ -1,0 +1,7 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
+  <circle cx="128" cy="128" r="128" fill="#3498DB"/>
+  <path d="M80 128c24-32 48-32 72 0s48 32 72 0" stroke="white" stroke-width="8" fill="none"/>
+  <circle cx="96" cy="108" r="8" fill="white"/>
+  <circle cx="160" cy="148" r="8" fill="white"/>
+  <path d="M64 160l64-32 64 32-64 32-64-32z" fill="white" opacity="0.6"/>
+</svg>

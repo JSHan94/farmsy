@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { TaskCard } from "./TaskCard"
@@ -14,6 +14,8 @@ import {
   useSensors,
   useDroppable,
   closestCenter,
+  pointerWithin,
+  rectIntersection,
 } from '@dnd-kit/core'
 import {
   SortableContext,
@@ -22,34 +24,16 @@ import {
 } from '@dnd-kit/sortable'
 import styles from './TaskBoard.module.css'
 
-type BlockchainProtocol = 'ethereum' | 'bitcoin' | 'solana' | 'polygon' | 'arbitrum' | 'optimism' | 'avalanche' | 'bsc'
+import { Task } from '../types/blockchain'
+import { getAllProtocols, getFilterOptions } from '../utils/blockchain'
 
-interface Task {
-  id: string
-  title: string
-  description: string
-  status: 'backlog' | 'todo' | 'doing' | 'done'
-  protocol: BlockchainProtocol
-  color: string
-  externalLink?: string
-}
-
-const protocolConfig = {
-  ethereum: { name: 'Ethereum', color: 'bg-blue-50 border-blue-500', brandColor: '#627EEA' },
-  bitcoin: { name: 'Bitcoin', color: 'bg-orange-50 border-orange-500', brandColor: '#F7931A' },
-  solana: { name: 'Solana', color: 'bg-purple-50 border-purple-500', brandColor: '#9945FF' },
-  polygon: { name: 'Polygon', color: 'bg-violet-50 border-violet-500', brandColor: '#8247E5' },
-  arbitrum: { name: 'Arbitrum', color: 'bg-blue-50 border-blue-600', brandColor: '#28A0F0' },
-  optimism: { name: 'Optimism', color: 'bg-red-50 border-red-500', brandColor: '#FF0420' },
-  avalanche: { name: 'Avalanche', color: 'bg-red-50 border-red-600', brandColor: '#E84142' },
-  bsc: { name: 'BSC', color: 'bg-yellow-50 border-yellow-500', brandColor: '#F3BA2F' }
-}
+const protocolConfig = getAllProtocols()
 
 interface TaskBoardProps {
-  tasks: Task[]
+  tasks: (Task & { color: string })[]
   onAddTask: (task: Omit<Task, 'id'>) => void
   onUpdateTask: (task: Task) => void
-  onMoveTask: (taskId: string, newStatus: 'backlog' | 'todo' | 'doing' | 'done') => void
+  onMoveTask: (taskId: string, newStatus: 'backlog' | 'todo' | 'doing' | 'done', previousStatus?: 'backlog' | 'todo' | 'doing' | 'done') => void
 }
 
 const columns = [
@@ -59,17 +43,7 @@ const columns = [
   { id: 'done', title: 'Done', status: 'done' as const },
 ]
 
-const filterOptions = [
-  { value: 'all', label: 'All Protocols' },
-  { value: 'ethereum', label: 'Ethereum', className: styles.colorEthereum },
-  { value: 'bitcoin', label: 'Bitcoin', className: styles.colorBitcoin },
-  { value: 'solana', label: 'Solana', className: styles.colorSolana },
-  { value: 'polygon', label: 'Polygon', className: styles.colorPolygon },
-  { value: 'arbitrum', label: 'Arbitrum', className: styles.colorArbitrum },
-  { value: 'optimism', label: 'Optimism', className: styles.colorOptimism },
-  { value: 'avalanche', label: 'Avalanche', className: styles.colorAvalanche },
-  { value: 'bsc', label: 'BSC', className: styles.colorBsc },
-]
+const filterOptions = getFilterOptions()
 
 // Droppable Column Component
 function DroppableColumn({ 
@@ -134,6 +108,10 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
   const [filter, setFilter] = useState('all')
   const [activeTask, setActiveTask] = useState<Task | null>(null)
   const [draggedOver, setDraggedOver] = useState<string | null>(null)
+  const [stableDraggedOver, setStableDraggedOver] = useState<string | null>(null)
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const dragLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -143,11 +121,29 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     })
   )
 
+  // Custom collision detection for better sorting stability
+  const collisionDetectionStrategy = (args: any) => {
+    if (activeId && activeTask) {
+      // First, get the closest droppable elements using pointerWithin
+      const pointerIntersections = pointerWithin(args)
+      if (pointerIntersections.length > 0) {
+        return pointerIntersections
+      }
+      
+      // Fall back to rectangle intersection
+      return rectIntersection(args)
+    }
+
+    return closestCenter(args)
+  }
+
   const handleDragStart = (event: DragStartEvent) => {
     console.log('🎯 Drag started:', event.active.id)
     const { active } = event
     const task = tasks.find(task => task.id === active.id)
     console.log('📋 Found task:', task?.title)
+    
+    setActiveId(active.id as string)
     setActiveTask(task || null)
   }
 
@@ -155,8 +151,20 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     const { active, over } = event
     console.log('🔄 Drag over:', over?.id || 'none', over?.data?.current)
     
+    // Clear any existing timeouts
+    if (dragOverTimeoutRef.current) {
+      clearTimeout(dragOverTimeoutRef.current)
+    }
+    if (dragLeaveTimeoutRef.current) {
+      clearTimeout(dragLeaveTimeoutRef.current)
+    }
+    
     if (!over) {
-      setDraggedOver(null)
+      // Delay clearing the stable state to prevent flickering
+      dragLeaveTimeoutRef.current = setTimeout(() => {
+        setStableDraggedOver(null)
+        setDraggedOver(null)
+      }, 100) // 100ms delay before clearing
       return
     }
     
@@ -167,8 +175,21 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     if (isOverAColumn) {
       const newStatus = over.id as 'backlog' | 'todo' | 'doing' | 'done'
       setDraggedOver(newStatus)
+      
+      // Set stable state immediately if entering a new column
+      if (stableDraggedOver !== newStatus) {
+        dragOverTimeoutRef.current = setTimeout(() => {
+          setStableDraggedOver(newStatus)
+        }, 150) // 150ms delay for stability
+      } else {
+        setStableDraggedOver(newStatus)
+      }
     } else {
       setDraggedOver(null)
+      // Delay clearing stable state
+      dragLeaveTimeoutRef.current = setTimeout(() => {
+        setStableDraggedOver(null)
+      }, 100)
     }
   }
 
@@ -176,8 +197,20 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     const { active, over } = event
     console.log('🎯 Drag ended - Active:', active.id, 'Over:', over?.id || 'none', 'Over Data:', over?.data?.current)
     
+    // Clean up all timeouts
+    if (dragOverTimeoutRef.current) {
+      clearTimeout(dragOverTimeoutRef.current)
+      dragOverTimeoutRef.current = null
+    }
+    if (dragLeaveTimeoutRef.current) {
+      clearTimeout(dragLeaveTimeoutRef.current)
+      dragLeaveTimeoutRef.current = null
+    }
+    
+    setActiveId(null)
     setActiveTask(null)
     setDraggedOver(null)
+    setStableDraggedOver(null)
     
     if (!over) {
       console.log('❌ No drop target found')
@@ -185,36 +218,74 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     }
     
     const activeId = active.id as string
-    const overId = over.id
+    const overId = over.id as string
     
-    // Find the task being dragged
+    // Find the active task
     const activeTask = tasks.find(task => task.id === activeId)
     if (!activeTask) {
       console.log('❌ Active task not found:', activeId)
       return
     }
-    
-    // Check if we're dropping over a column (either directly or on the column ID)
+
+    // Check if we're dropping over another task (for reordering within column)
+    const overTask = tasks.find(task => task.id === overId)
+    if (overTask && activeTask.status === overTask.status) {
+      console.log('🔄 Reordering within column:', activeTask.status)
+      // Handle reordering within the same column
+      const columnTasks = getFilteredTasks(activeTask.status)
+      const activeIndex = columnTasks.findIndex(task => task.id === activeId)
+      const overIndex = columnTasks.findIndex(task => task.id === overId)
+      
+      if (activeIndex !== overIndex) {
+        const reorderedTasks = arrayMove(columnTasks, activeIndex, overIndex)
+        // Update task orders based on new positions
+        reorderedTasks.forEach((task, index) => {
+          if (task.id === activeId || task.id === overId || Math.abs(activeIndex - overIndex) > 1) {
+            const updatedTask = { ...task, order: index }
+            onUpdateTask(updatedTask)
+          }
+        })
+        console.log('✅ Tasks reordered within column')
+      }
+      return
+    }
+
+    // Check if we're dropping over a column
     const isOverAColumn = over.data.current?.type === 'column' || 
-                         ['backlog', 'todo', 'doing', 'done'].includes(overId as string)
+                         ['backlog', 'todo', 'doing', 'done'].includes(overId)
     
     console.log('📍 Drop analysis:', {
       isOverAColumn,
       overId,
       overData: over.data.current,
-      validColumnIds: ['backlog', 'todo', 'doing', 'done'].includes(overId as string)
+      isOverTask: !!overTask,
+      activeStatus: activeTask.status,
+      overTaskStatus: overTask?.status
     })
     
     if (isOverAColumn) {
       const newStatus = overId as 'backlog' | 'todo' | 'doing' | 'done'
       if (activeTask.status !== newStatus) {
         console.log('⚡ Moving task "' + activeTask.title + '" from', activeTask.status, 'to', newStatus)
-        onMoveTask(activeId, newStatus)
+
+        // Get the target column tasks to determine the new order
+        const targetColumnTasks = getFilteredTasks(newStatus)
+        const newOrder = targetColumnTasks.length
+
+        // Store previous status for XP calculation
+        const previousStatus = activeTask.status
+
+        // Update task with new status and order
+        const updatedTask = { ...activeTask, status: newStatus, order: newOrder }
+        onUpdateTask(updatedTask)
+
+        // Call onMoveTask for additional handling (like XP gains)
+        onMoveTask(activeTask.id, newStatus, previousStatus)
       } else {
         console.log('ℹ️ Task already in', newStatus)
       }
     } else {
-      console.log('❌ Not dropping over a valid column:', overId)
+      console.log('❌ Not dropping over a valid target:', overId)
     }
   }
 
@@ -223,13 +294,18 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     if (filter !== 'all') {
       filteredTasks = filteredTasks.filter(task => task.protocol === filter)
     }
-    return filteredTasks
+    // Sort by order field, fallback to id for consistent ordering
+    return filteredTasks.sort((a, b) => {
+      const orderA = a.order ?? parseInt(a.id)
+      const orderB = b.order ?? parseInt(b.id)
+      return orderA - orderB
+    })
   }
 
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={collisionDetectionStrategy}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragEnd={handleDragEnd}
@@ -249,12 +325,12 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
                   <SelectItem key={option.value} value={option.value}>
                     <div className={styles.filterOption}>
                       {option.value !== 'all' && (
-                        <div 
-                          className={styles.filterColorSwatch} 
-                          style={{ 
-                            backgroundColor: protocolConfig[option.value as BlockchainProtocol]?.brandColor || '#gray',
-                            borderColor: protocolConfig[option.value as BlockchainProtocol]?.brandColor || '#gray'
-                          }} 
+                        <div
+                          className={styles.filterColorSwatch}
+                          style={{
+                            backgroundColor: protocolConfig[option.value]?.brandColor || '#gray',
+                            borderColor: protocolConfig[option.value]?.brandColor || '#gray'
+                          }}
                         />
                       )}
                       {option.label}
@@ -277,7 +353,7 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
               id={column.status}
               title={column.title}
               taskCount={columnTasks.length}
-              isDraggedOver={draggedOver === column.status}
+              isDraggedOver={stableDraggedOver === column.status}
             >
               <SortableContext 
                 items={columnTasks.map(task => task.id)}

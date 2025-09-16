@@ -1,0 +1,128 @@
+{
+  "blockchains": {
+    "sui": {
+      "tasks": [
+        {
+          "id": "sui-1",
+          "title": "Supply SUI to Suilend",
+          "description": "Deposit SUI into Suilend lending pool to start earning interest",
+          "status": "backlog",
+          "blockchain": "sui",
+          "protocol": "Suilend",
+          "category": "lending",
+          "externalLink": "https://suilend.fi",
+          "startDate": "2025-09-10",
+          "endDate": "2025-09-20",
+          "order": 0,
+          "xpReward": 25,
+          "difficulty": "easy"
+        },
+        {
+          "id": "sui-2",
+          "title": "Borrow USDC from Suilend",
+          "description": "Use supplied SUI as collateral to borrow USDC",
+          "status": "todo",
+          "blockchain": "sui",
+          "protocol": "Suilend",
+          "category": "lending",
+          "externalLink": "https://suilend.fi",
+          "startDate": "2025-09-21",
+          "endDate": "2025-09-30",
+          "order": 1,
+          "xpReward": 35,
+          "difficulty": "medium"
+        },
+        {
+          "id": "sui-3",
+          "title": "Provide liquidity on Cetus",
+          "description": "Add USDC/SUI pair liquidity to Cetus pool",
+          "status": "backlog",
+          "blockchain": "sui",
+          "protocol": "Cetus",
+          "category": "dex",
+          "externalLink": "https://www.cetus.zone",
+          "startDate": "2025-09-12",
+          "endDate": "2025-09-25",
+          "order": 0,
+          "xpReward": 30,
+          "difficulty": "medium"
+        },
+        {
+          "id": "sui-4",
+          "title": "Stake SUI on Haedal",
+          "description": "Stake SUI to receive stSUI liquid staking token",
+          "status": "todo",
+          "blockchain": "sui",
+          "protocol": "Haedal",
+          "category": "staking",
+          "externalLink": "https://haedal.fi",
+          "startDate": "2025-09-15",
+          "endDate": "2025-09-29",
+          "order": 0,
+          "xpReward": 20,
+          "difficulty": "easy"
+        },
+        {
+          "id": "sui-5",
+          "title": "Trade on Bluefin",
+          "description": "Execute a swap between SUI and USDC on Bluefin DEX",
+          "status": "done",
+          "blockchain": "sui",
+          "protocol": "Bluefin",
+          "category": "trading",
+          "externalLink": "https://bluefin.io",
+          "startDate": "2025-08-30",
+          "endDate": "2025-09-05",
+          "order": 0,
+          "xpReward": 15,
+          "difficulty": "easy"
+        },
+        {
+          "id": "sui-6",
+          "title": "Farm Momentum rewards",
+          "description": "Deposit LP tokens into Momentum to farm governance tokens",
+          "status": "backlog",
+          "blockchain": "sui",
+          "protocol": "Momentum",
+          "category": "farming",
+          "externalLink": "https://momentum.fi",
+          "startDate": "2025-09-18",
+          "endDate": "2025-10-02",
+          "order": 0,
+          "xpReward": 40,
+          "difficulty": "hard"
+        },
+        {
+          "id": "sui-7",
+          "title": "Lend USDC on Scallop",
+          "description": "Supply USDC to Scallop money market to earn yield",
+          "status": "todo",
+          "blockchain": "sui",
+          "protocol": "Scallop",
+          "category": "lending",
+          "externalLink": "https://scallop.io",
+          "startDate": "2025-09-19",
+          "endDate": "2025-09-28",
+          "order": 0,
+          "xpReward": 25,
+          "difficulty": "easy"
+        },
+        {
+          "id": "sui-8",
+          "title": "Try Kriya trading",
+          "description": "Open a leveraged position using Kriya's perps trading",
+          "status": "backlog",
+          "blockchain": "sui",
+          "protocol": "Kriya",
+          "category": "derivatives",
+          "externalLink": "https://kriya.finance",
+          "startDate": "2025-09-22",
+          "endDate": "2025-09-30",
+          "order": 0,
+          "xpReward": 50,
+          "difficulty": "hard"
+        }
+      ]
+    }
+  }
+}

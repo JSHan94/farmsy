@@ -48,6 +48,7 @@
 .columnWrapperActive {
   background-color: rgba(34, 197, 94, 0.1);
   transform: scale(1.02);
+  transition: all 0.3s ease;
 }
 
 @media (min-width: 768px) {
@@ -132,6 +133,19 @@
   animation: dropPulse 2s ease-in-out infinite;
   backdrop-filter: blur(2px);
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+  opacity: 0;
+  animation: dropIndicatorFadeIn 0.2s ease-out forwards, dropPulse 2s ease-in-out infinite 0.2s;
+}
+
+@keyframes dropIndicatorFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes dropPulse {

@@ -2,9 +2,31 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## System
+You are a two-step agent:
+1. Prompt Refiner: Rewrite the user's prompt to be clear, concise, and well-structured. 
+   - Remove vagueness
+   - Add missing context
+   - Ensure consistent format
+2. Executor: Use the refined prompt to generate the final answer.
+
+Always output in this format:
+
+**Refined Prompt**
+<your rewritten prompt here>
+
+**Answer**
+<final response based on the refined prompt>
+
 ## Project Overview
 
-Farmsy is a task management application built with React, TypeScript, and Vite. It's a modern web application featuring a drag-and-drop task board with wallet authentication integration via Privy.
+Farmsy is a gamified, multi-blockchain task management application built with React, TypeScript, and Vite.
+
+Users can manage and track tasks through a Task Tracker system that supports multiple blockchain ecosystems, with initial focus on Sui dApps.
+
+Completing tracked tasks rewards users with XP points (varies by difficulty: easy=20, medium=35, hard=50), allowing them to level up and progress over time.
+
+The application is designed with extensible architecture to easily add new blockchains and protocols.
 
 ## Development Commands
 
@@ -16,20 +38,23 @@ Farmsy is a task management application built with React, TypeScript, and Vite. 
 ### Core Application Structure
 
 - **App.tsx** - Main application component managing global task state and sidebar layout
-- **main.tsx** - Application entry point with Privy authentication provider setup
+- **main.tsx** - Application entry point with SUI Slush authentication provider setup
 - **Task Management** - Centralized state management for CRUD operations on tasks with drag-and-drop support
 
 ### Component Architecture
 
 **Main Components:**
-- `TaskBoard` - Core kanban board with drag-and-drop functionality using @dnd-kit
-- `TaskCard` - Individual task display with edit capabilities
-- `AddTaskDialog` - Modal for creating new tasks
-- `AppSidebar` - Navigation sidebar with menu items
-- `WalletConnect` - Privy wallet authentication integration
+
+- **TaskBoard** - Kanban board with drag-and-drop functionality using @dnd-kit
+- **TaskCard** - Individual task display with edit and completion actions
+- **TaskTrackerBoard** - Enhanced task tracking with XP integration
+- **AddTaskDialog** - Modal for creating new tasks
+- **AppSidebar** - Navigation sidebar with menu items
+- **WalletConnect** - SUI Slush wallet authentication integration
+- **XPProgressBar** - Visual representation of user’s XP and next level progress
+- **LevelBadge** - UI element showing current user level
 
 **UI Components:**
-- Comprehensive shadcn/ui component library (46+ components) in `src/components/ui/`
 - Components include: buttons, cards, dialogs, forms, charts, navigation elements
 - All components are TypeScript-based with proper type definitions
 
@@ -41,10 +66,6 @@ Farmsy is a task management application built with React, TypeScript, and Vite. 
 - **Design System** - Consistent color scheme with task status colors (blue, green, yellow, purple, pink, gray)
 
 ### Key Dependencies and Integrations
-
-**Authentication:**
-- Privy (`@privy-io/react-auth`) - Wallet and email authentication
-- Configuration includes wallet and email login methods with embedded wallet creation
 
 **UI Framework:**
 - Extensive Radix UI component library integration
@@ -66,11 +87,18 @@ Farmsy is a task management application built with React, TypeScript, and Vite. 
 ```
 src/
 ├── App.tsx                    # Main app component with task state
-├── main.tsx                   # Entry point with Privy provider
+├── main.tsx                   # Entry point with Sui wallet provider
 ├── components/
 │   ├── [Component].tsx        # Main feature components
 │   ├── [Component].module.css # Component-specific styles
 │   └── ui/                    # Reusable UI components (shadcn/ui)
+├── types/
+│   └── blockchain.ts          # Blockchain and protocol type definitions
+├── utils/
+│   └── blockchain.ts          # Blockchain utility functions and helpers
+├── data/
+│   ├── protocol.json          # Multi-blockchain protocol configurations
+│   └── task.json              # Multi-blockchain task data
 ├── styles/                    # Global style definitions
 └── index.css                  # Main stylesheet with Tailwind
 ```
@@ -78,10 +106,80 @@ src/
 ### Key Patterns
 
 - **Component Co-location** - Components paired with their CSS modules
-- **TypeScript Interfaces** - Consistent Task interface across components
-- **State Management** - Props drilling pattern for task operations (add, update, move)
+- **Extensible Type System** - Blockchain-agnostic interfaces with specific implementations
+- **State Management** - Props drilling pattern for task operations (add, update, move) with XP rewards
 - **CSS Variables** - Extensive use of custom properties for theming
 - **Path Aliases** - `@/` alias configured for src directory imports
+- **Multi-blockchain Support** - Structured JSON data with blockchain namespacing
+
+## Data Architecture
+
+### Multi-Blockchain Structure
+
+The application uses a hierarchical data structure to support multiple blockchains:
+
+```json
+{
+  "blockchains": {
+    "sui": {
+      "name": "Sui",
+      "protocols": { ... },
+      "tasks": [ ... ]
+    },
+    "ethereum": {
+      "name": "Ethereum",
+      "protocols": { ... },
+      "tasks": [ ... ]
+    }
+  }
+}
+```
+
+### Protocol Configuration (`protocol.json`)
+- **Blockchain Grouping** - Protocols organized by blockchain
+- **Standardized Metadata** - name, color, brandColor, symbol, icon, category
+- **Category System** - lending, dex, staking, trading, farming, derivatives
+
+### Task Management (`task.json`)
+- **Unique IDs** - Format: `{blockchain}-{timestamp}-{random}`
+- **XP Rewards** - Variable XP based on difficulty (easy: 20, medium: 35, hard: 50)
+- **Categories** - Tasks linked to protocol categories for better organization
+- **Extensible Fields** - blockchain, protocol, category, difficulty, xpReward
+
+### Adding New Blockchains
+
+To add a new blockchain:
+
+1. **Update Types** (`types/blockchain.ts`):
+   ```typescript
+   export type BlockchainId = 'sui' | 'ethereum' | 'newchain'
+   export type NewchainProtocol = 'Protocol1' | 'Protocol2'
+   ```
+
+2. **Add Protocol Data** (`protocol.json`):
+   ```json
+   {
+     "blockchains": {
+       "newchain": {
+         "name": "New Chain",
+         "protocols": { ... }
+       }
+     }
+   }
+   ```
+
+3. **Add Tasks** (`task.json`):
+   ```json
+   {
+     "blockchains": {
+       "newchain": {
+         "tasks": [ ... ]
+       }
+     }
+   }
+   ```
+
+4. **Add Icons** - Create SVG icons in `/public/` directory
 
 ## Configuration
 
@@ -92,7 +190,7 @@ src/
 
 ## Authentication Setup
 
-The application uses Privy with app ID `cmcio1ujk0067l80mkeatt4wu`. The configuration supports:
-- Wallet and email login methods  
-- Light theme with custom accent color (#676FFF)
-- Embedded wallet creation for users without wallets
+The application uses Sui Wallet integration via @mysten/dapp-kit:
+- **Wallet Providers** - SuiClientProvider with network configuration
+- **Network Support** - devnet, testnet, mainnet configurations
+- **Wallet Connection** - ConnectButton component for wallet interactions

@@ -31,6 +31,12 @@
   padding: 0 1.5rem;
 }
 
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .mainContent {
   flex: 1;
   overflow: auto;

@@ -1,0 +1,68 @@
+{
+  "blockchains": {
+    "sui": {
+      "name": "Sui",
+      "symbol": "SUI",
+      "brandColor": "#4DA2FF",
+      "icon": "/sui-logo.svg",
+      "protocols": {
+        "Suilend": {
+          "name": "Suilend",
+          "color": "bg-green-50 border-green-500",
+          "brandColor": "#2ECC71",
+          "symbol": "SL",
+          "icon": "/suilend.svg",
+          "category": "lending"
+        },
+        "Cetus": {
+          "name": "Cetus",
+          "color": "bg-indigo-50 border-indigo-500",
+          "brandColor": "#5E4B8B",
+          "symbol": "CT",
+          "icon": "/cetus.svg",
+          "category": "dex"
+        },
+        "Haedal": {
+          "name": "Haedal",
+          "color": "bg-red-50 border-red-500",
+          "brandColor": "#E74C3C",
+          "symbol": "HD",
+          "icon": "/haedal.svg",
+          "category": "staking"
+        },
+        "Bluefin": {
+          "name": "Bluefin",
+          "color": "bg-blue-50 border-blue-500",
+          "brandColor": "#3498DB",
+          "symbol": "BF",
+          "icon": "/bluefin.svg",
+          "category": "trading"
+        },
+        "Momentum": {
+          "name": "Momentum",
+          "color": "bg-yellow-50 border-yellow-500",
+          "brandColor": "#F1C40F",
+          "symbol": "MM",
+          "icon": "/momentum.svg",
+          "category": "farming"
+        },
+        "Scallop": {
+          "name": "Scallop",
+          "color": "bg-teal-50 border-teal-500",
+          "brandColor": "#1ABC9C",
+          "symbol": "SC",
+          "icon": "/scallop.svg",
+          "category": "lending"
+        },
+        "Kriya": {
+          "name": "Kriya",
+          "color": "bg-pink-50 border-pink-500",
+          "brandColor": "#E91E63",
+          "symbol": "KR",
+          "icon": "/kriya.svg",
+          "category": "derivatives"
+        }
+      }
+    }
+  }
+}

@@ -1,47 +1,48 @@
-import { usePrivy } from '@privy-io/react-auth'
+import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
 import { Button } from "./ui/button"
 import { Wallet } from "lucide-react"
 import styles from './WalletConnect.module.css'
 
 export function WalletConnect() {
-  const { ready, authenticated, user, login, logout } = usePrivy()
+  const currentAccount = useCurrentAccount()
 
-  // Don't render anything until Privy is ready
-  if (!ready) {
-    return (
-      <Button variant="outline" disabled className={styles.walletButton}>
-        <Wallet className={styles.walletIcon} />
-        Loading...
-      </Button>
-    )
-  }
-
-  const walletAddress = user?.wallet?.address
-  const displayAddress = walletAddress 
-    ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
+  const displayAddress = currentAccount?.address
+    ? `${currentAccount.address.slice(0, 6)}...${currentAccount.address.slice(-4)}`
     : ''
 
-  if (authenticated && user) {
+  if (currentAccount) {
     return (
-      <Button 
-        variant="outline" 
-        onClick={logout}
-        className={styles.walletButton}
-      >
-        <Wallet className={styles.walletIcon} />
-        <span className={styles.walletAddress}>{displayAddress}</span>
-        <span className={styles.connectedText}>Connected</span>
-      </Button>
+      <ConnectButton
+        connectText="Connect Wallet"
+        connectedText={displayAddress}
+        style={{
+          background: 'rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          borderRadius: '6px',
+          padding: '8px 16px',
+          color: 'inherit',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+      />
     )
   }
 
   return (
-    <Button 
-      onClick={login}
-      className={styles.walletButton}
-    >
-      <Wallet className={styles.walletIcon} />
-      Connect Wallet
-    </Button>
+    <ConnectButton
+      connectText="Connect Wallet"
+      style={{
+        background: 'hsl(var(--primary))',
+        color: 'hsl(var(--primary-foreground))',
+        border: 'none',
+        borderRadius: '6px',
+        padding: '8px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        cursor: 'pointer'
+      }}
+    />
   )
 }
