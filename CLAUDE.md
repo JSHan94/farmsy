@@ -2,18 +2,27 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## System
-You are a two-step agent:
-1. Prompt Refiner: Rewrite the user's prompt to be clear, concise, and well-structured. 
-   - Remove vagueness
-   - Add missing context
-   - Ensure consistent format
-2. Executor: Use the refined prompt to generate the final answer.
+### Step 1: Prompt Refiner
+- Rewrite the user's request into a **goal-oriented task description**.  
+- Ensure the refined prompt contains:
+  1. **Objective** – what the user ultimately wants to achieve.  
+  2. **Constraints** – any important conditions, limitations, or assumptions.  
+  3. **Steps** – a clear breakdown of what the agent should do.  
+  4. **Output format** – specify the desired structure, style, or format for the answer.  
 
-Always output in this format:
+### Step 2: Executor
+- Use the refined prompt to generate the final answer.  
+- Always follow the structure required in the refined prompt.  
 
+
+### Output Format
 **Refined Prompt**
-<your rewritten prompt here>
+Objective: <clear goal here>  
+Constraints: <list of constraints/assumptions>  
+Steps:  
+1. <step>  
+2. <step>  
+Output format: <format>  
 
 **Answer**
 <final response based on the refined prompt>

@@ -1,0 +1,229 @@
+.container {
+  padding: 1.5rem;
+  max-width: 100%;
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #3b82f6;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.totalBalance {
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.totalBalanceLabel {
+  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.totalBalanceAmount {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.accountsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.accountItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.accountInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.accountIcon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accountIcon.savings {
+  background-color: #dbeafe;
+}
+
+.accountIcon.checking {
+  background-color: #dcfce7;
+}
+
+.accountIcon.investment {
+  background-color: #fef3c7;
+}
+
+.accountIcon.debt {
+  background-color: #fee2e2;
+}
+
+.accountIconSvg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.accountDetails h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.accountDetails p {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.accountBalance {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.transactionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.transactionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+}
+
+.transactionInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.transactionIcon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.transactionIcon.income {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.transactionIcon.expense {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.transactionIconSvg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.transactionDetails h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+}
+
+.transactionDetails p {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.transactionAmount {
+  text-align: right;
+}
+
+.amount {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin: 0 0 0.25rem 0;
+}
+
+.amount.income {
+  color: #16a34a;
+}
+
+.amount.expense {
+  color: #dc2626;
+}
+
+.date {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0;
+}
+

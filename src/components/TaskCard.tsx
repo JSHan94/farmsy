@@ -1,4 +1,3 @@
-import { Card, CardContent } from "./ui/card"
 import { ExternalLink } from "lucide-react"
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
@@ -82,7 +81,7 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
       try {
         playWaterDropSound()
       } catch (error) {
-        console.log('Audio not available:', error)
+        // Audio not available in this environment
       }
     }
 

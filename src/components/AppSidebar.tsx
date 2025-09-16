@@ -1,40 +1,42 @@
-import { 
-  Sidebar, 
-  SidebarContent, 
-  SidebarGroup, 
-  SidebarGroupContent, 
-  SidebarMenu, 
-  SidebarMenuButton, 
-  SidebarMenuItem 
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem
 } from "./ui/sidebar"
 import { Home, CheckSquare, Settings, BarChart3 } from "lucide-react"
+import { Link, useLocation } from "react-router-dom"
 import styles from './AppSidebar.module.css'
 
 const menuItems = [
   {
     title: "Dashboard",
     icon: Home,
-    url: "#",
+    url: "/",
   },
   {
     title: "Tasks",
     icon: CheckSquare,
-    url: "#",
-    isActive: true,
+    url: "/tasks",
   },
   {
     title: "Analytics",
     icon: BarChart3,
-    url: "#",
+    url: "/analytics",
   },
   {
     title: "Settings",
     icon: Settings,
-    url: "#",
+    url: "/settings",
   },
 ]
 
 export function AppSidebar() {
+  const location = useLocation()
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -46,11 +48,11 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={item.isActive}>
-                    <a href={item.url} className={styles.menuLink}>
+                  <SidebarMenuButton asChild isActive={location.pathname === item.url}>
+                    <Link to={item.url} className={styles.menuLink}>
                       <item.icon className={styles.menuIcon} />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

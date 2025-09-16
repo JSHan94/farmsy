@@ -38,6 +38,60 @@
   gap: 1.5rem;
 }
 
+/* Mobile horizontal scroll */
+@media (max-width: 767px) {
+  .boardGrid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    /* Enable smooth touch scrolling on mobile */
+    touch-action: pan-x;
+    /* Add momentum scrolling for iOS */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .columnWrapper {
+    flex: 0 0 280px;
+    scroll-snap-align: start;
+    /* Prevent column from shrinking */
+    min-width: 280px;
+  }
+
+  /* Custom scrollbar styling */
+  .boardGrid::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .boardGrid::-webkit-scrollbar-track {
+    background: var(--color-muted);
+    border-radius: 4px;
+    margin: 0 1rem;
+  }
+
+  .boardGrid::-webkit-scrollbar-thumb {
+    background: var(--color-muted-foreground);
+    border-radius: 4px;
+    opacity: 0.7;
+  }
+
+  .boardGrid::-webkit-scrollbar-thumb:hover {
+    background: var(--color-foreground);
+    opacity: 1;
+  }
+
+  /* Hide scrollbar on mobile browsers that support it */
+  @supports (-webkit-touch-callout: none) {
+    .boardGrid {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-muted-foreground) transparent;
+    }
+  }
+}
+
 .columnWrapper {
   position: relative;
   transition: all 0.2s ease;
@@ -66,7 +120,15 @@
 .column {
   height: fit-content;
   transition: all 0.2s ease;
-  min-height: 200px;
+  min-height: 400px;
+}
+
+/* Ensure consistent column height on mobile */
+@media (max-width: 767px) {
+  .column {
+    min-height: 500px;
+    height: 500px;
+  }
 }
 
 .columnOver {
@@ -105,7 +167,7 @@
 }
 
 .droppableArea {
-  min-height: 200px;
+  min-height: 300px;
   padding: 0.5rem;
   border-radius: 0.5rem;
   transition: background-color 0.2s ease;
@@ -113,11 +175,27 @@
   flex: 1;
 }
 
+/* Ensure consistent droppable area height on mobile */
+@media (max-width: 767px) {
+  .droppableArea {
+    min-height: 400px;
+    height: 400px;
+  }
+}
+
 .tasksContainer {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-height: 50px;
+  min-height: 250px;
+  flex: 1;
+}
+
+/* Ensure consistent tasks container height on mobile */
+@media (max-width: 767px) {
+  .tasksContainer {
+    min-height: 350px;
+  }
 }
 
 .dropIndicator {

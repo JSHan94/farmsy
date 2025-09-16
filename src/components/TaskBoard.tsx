@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { TaskCard } from "./TaskCard"
@@ -112,6 +112,7 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
   const [activeId, setActiveId] = useState<string | null>(null)
   const dragOverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dragLeaveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const boardRef = useRef<HTMLDivElement>(null)
   
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -138,10 +139,8 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
   }
 
   const handleDragStart = (event: DragStartEvent) => {
-    console.log('🎯 Drag started:', event.active.id)
     const { active } = event
     const task = tasks.find(task => task.id === active.id)
-    console.log('📋 Found task:', task?.title)
     
     setActiveId(active.id as string)
     setActiveTask(task || null)
@@ -149,7 +148,6 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
 
   const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event
-    console.log('🔄 Drag over:', over?.id || 'none', over?.data?.current)
     
     // Clear any existing timeouts
     if (dragOverTimeoutRef.current) {
@@ -170,7 +168,6 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     
     // Check if we're over a column
     const isOverAColumn = over.data.current?.type === 'column'
-    console.log('📍 Over column:', isOverAColumn, over.id)
     
     if (isOverAColumn) {
       const newStatus = over.id as 'backlog' | 'todo' | 'doing' | 'done'
@@ -195,7 +192,6 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
-    console.log('🎯 Drag ended - Active:', active.id, 'Over:', over?.id || 'none', 'Over Data:', over?.data?.current)
     
     // Clean up all timeouts
     if (dragOverTimeoutRef.current) {
@@ -213,7 +209,6 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     setStableDraggedOver(null)
     
     if (!over) {
-      console.log('❌ No drop target found')
       return
     }
     
@@ -223,14 +218,12 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     // Find the active task
     const activeTask = tasks.find(task => task.id === activeId)
     if (!activeTask) {
-      console.log('❌ Active task not found:', activeId)
       return
     }
 
     // Check if we're dropping over another task (for reordering within column)
     const overTask = tasks.find(task => task.id === overId)
     if (overTask && activeTask.status === overTask.status) {
-      console.log('🔄 Reordering within column:', activeTask.status)
       // Handle reordering within the same column
       const columnTasks = getFilteredTasks(activeTask.status)
       const activeIndex = columnTasks.findIndex(task => task.id === activeId)
@@ -245,7 +238,6 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
             onUpdateTask(updatedTask)
           }
         })
-        console.log('✅ Tasks reordered within column')
       }
       return
     }
@@ -254,19 +246,10 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
     const isOverAColumn = over.data.current?.type === 'column' || 
                          ['backlog', 'todo', 'doing', 'done'].includes(overId)
     
-    console.log('📍 Drop analysis:', {
-      isOverAColumn,
-      overId,
-      overData: over.data.current,
-      isOverTask: !!overTask,
-      activeStatus: activeTask.status,
-      overTaskStatus: overTask?.status
-    })
     
     if (isOverAColumn) {
       const newStatus = overId as 'backlog' | 'todo' | 'doing' | 'done'
       if (activeTask.status !== newStatus) {
-        console.log('⚡ Moving task "' + activeTask.title + '" from', activeTask.status, 'to', newStatus)
 
         // Get the target column tasks to determine the new order
         const targetColumnTasks = getFilteredTasks(newStatus)
@@ -281,11 +264,7 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
 
         // Call onMoveTask for additional handling (like XP gains)
         onMoveTask(activeTask.id, newStatus, previousStatus)
-      } else {
-        console.log('ℹ️ Task already in', newStatus)
       }
-    } else {
-      console.log('❌ Not dropping over a valid target:', overId)
     }
   }
 
@@ -343,7 +322,7 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
         </div>
       </div>
 
-      <div className={styles.boardGrid}>
+      <div ref={boardRef} className={styles.boardGrid}>
         {columns.map((column) => {
           const columnTasks = getFilteredTasks(column.status)
           

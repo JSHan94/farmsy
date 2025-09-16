@@ -1,0 +1,143 @@
+/* Heatmap Styles */
+.heatmapContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.heatmapTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.heatmap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.heatmapGrid {
+  display: grid;
+  grid-template-columns: 2rem auto;
+  gap: 0.5rem;
+  justify-content: center;
+  min-width: fit-content;
+}
+
+.heatmapContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: fit-content;
+}
+
+.monthLabelsRow {
+  display: flex;
+  gap: 2px;
+  height: 16px;
+  align-items: center;
+  min-width: 750px;
+}
+
+.monthLabelCell {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: left;
+  min-width: 12px;
+  width: 12px;
+  flex-shrink: 0;
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 85px;
+  margin-top: 20px;
+  width: 2rem;
+}
+
+.dayLabel {
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: right;
+  padding-right: 0.25rem;
+  line-height: 11px;
+}
+
+.heatmapWeeks {
+  display: flex;
+  gap: 3px;
+  min-width: 750px;
+  padding: 2px;
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day, .emptyDay {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  border: 1px solid #e5e7eb;
+}
+
+.emptyDay {
+  background: transparent;
+  border: none;
+}
+
+.intensity0 {
+  background-color: #ebedf0;
+}
+
+.intensity1 {
+  background-color: #9be9a8;
+}
+
+.intensity2 {
+  background-color: #40c463;
+}
+
+.intensity3 {
+  background-color: #30a14e;
+}
+
+.intensity4 {
+  background-color: #216e39;
+}
+
+.heatmapLegend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+  width: fit-content;
+  align-self: center;
+}
+
+.legendText {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.legendColors {
+  display: flex;
+  gap: 2px;
+}
+
+.legendColor {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  border: 1px solid #e5e7eb;
+}
