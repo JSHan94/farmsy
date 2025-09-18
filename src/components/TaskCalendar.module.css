@@ -1,0 +1,282 @@
+.calendarCard {
+  height: fit-content;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.calendarTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.taskCount {
+  font-size: 0.875rem;
+  font-weight: 500;
+  background-color: var(--color-muted);
+  color: var(--color-muted-foreground);
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.calendarContent {
+  padding: 1.5rem;
+}
+
+/* FullCalendar Custom Styling */
+:global(.fc) {
+  font-family: inherit;
+  font-size: 0.875rem;
+}
+
+:global(.fc-toolbar) {
+  margin-bottom: 1rem !important;
+  gap: 0.5rem;
+}
+
+:global(.fc-toolbar-title) {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--color-foreground) !important;
+}
+
+:global(.fc-button) {
+  background-color: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: white !important;
+  border-radius: 0.375rem !important;
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+:global(.fc-button:hover) {
+  background-color: var(--color-primary-hover) !important;
+  border-color: var(--color-primary-hover) !important;
+}
+
+:global(.fc-button:disabled) {
+  background-color: var(--color-muted) !important;
+  border-color: var(--color-muted) !important;
+  color: var(--color-muted-foreground) !important;
+  cursor: not-allowed !important;
+}
+
+:global(.fc-button-active) {
+  background-color: var(--color-primary-active) !important;
+  border-color: var(--color-primary-active) !important;
+}
+
+:global(.fc-daygrid-day) {
+  transition: background-color 0.2s ease;
+}
+
+:global(.fc-daygrid-day:hover) {
+  background-color: var(--color-muted) !important;
+}
+
+:global(.fc-day-today) {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  border: 1px solid #3b82f6 !important;
+}
+
+.today {
+  background-color: rgba(59, 130, 246, 0.1) !important;
+}
+
+:global(.fc-col-header-cell) {
+  background-color: var(--color-muted) !important;
+  font-weight: 600 !important;
+  color: var(--color-foreground) !important;
+  padding: 0.75rem 0.5rem !important;
+  border-bottom: 1px solid var(--color-border) !important;
+}
+
+:global(.fc-daygrid-day-number) {
+  color: var(--color-foreground) !important;
+  font-weight: 500 !important;
+  padding: 0.25rem !important;
+}
+
+/* Custom Event Styling */
+.event {
+  border-radius: 0.375rem !important;
+  padding: 0.25rem 0.5rem !important;
+  margin: 0.125rem 0 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  border: none !important;
+  color: white !important;
+  font-size: 0.75rem !important;
+}
+
+.eventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  width: 100%;
+}
+
+.eventTitle {
+  font-weight: 600;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eventMeta {
+  display: flex;
+  gap: 0.25rem;
+  font-size: 0.625rem;
+  opacity: 0.9;
+  flex-wrap: wrap;
+}
+
+.eventProtocol,
+.eventDifficulty,
+.eventXP {
+  padding: 0.125rem 0.25rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0.25rem;
+  font-weight: 500;
+}
+
+.eventStatus {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  align-self: flex-start;
+  margin-top: 0.125rem;
+}
+
+/* Status-specific styling */
+.eventBacklog {
+  background-color: #6b7280 !important;
+}
+
+.eventTodo {
+  background-color: #3b82f6 !important;
+}
+
+.eventDoing {
+  background-color: #f59e0b !important;
+}
+
+.eventDone {
+  background-color: #10b981 !important;
+}
+
+.statusBacklog {
+  background-color: rgba(107, 114, 128, 0.3) !important;
+}
+
+.statusTodo {
+  background-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+.statusDoing {
+  background-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.statusDone {
+  background-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+/* More link styling */
+:global(.fc-more-link) {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+  border-radius: 0.25rem !important;
+  padding: 0.125rem 0.25rem !important;
+  font-size: 0.625rem !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  margin-top: 0.125rem !important;
+  display: inline-block !important;
+}
+
+:global(.fc-more-link:hover) {
+  background-color: var(--color-primary-hover) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .calendarContent {
+    padding: 1rem;
+  }
+
+  :global(.fc-toolbar) {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+
+  :global(.fc-toolbar-chunk) {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+  }
+
+  :global(.fc-button) {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  .eventTitle {
+    font-size: 0.625rem;
+  }
+
+  .eventMeta {
+    display: none; /* Hide meta info on small screens */
+  }
+
+  .eventStatus {
+    display: none; /* Hide status on small screens */
+  }
+}
+
+@media (max-width: 480px) {
+  :global(.fc-toolbar-title) {
+    font-size: 1rem !important;
+  }
+
+  :global(.fc-col-header-cell) {
+    padding: 0.5rem 0.25rem !important;
+    font-size: 0.75rem !important;
+  }
+
+  :global(.fc-daygrid-day-number) {
+    font-size: 0.75rem !important;
+  }
+
+  .eventTitle {
+    font-size: 0.625rem;
+    line-height: 1.1;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :global(.fc-button:disabled) {
+    opacity: 0.5;
+  }
+
+  :global(.fc-col-header-cell) {
+    background-color: var(--color-muted) !important;
+  }
+
+  :global(.fc-day-today) {
+    background-color: rgba(59, 130, 246, 0.2) !important;
+  }
+}

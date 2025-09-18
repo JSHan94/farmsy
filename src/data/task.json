@@ -13,6 +13,7 @@
           "externalLink": "https://suilend.fi",
           "startDate": "2025-09-10",
           "endDate": "2025-09-20",
+          "dueDate": "2025-09-22",
           "order": 0,
           "xpReward": 25,
           "difficulty": "easy"
@@ -28,6 +29,7 @@
           "externalLink": "https://suilend.fi",
           "startDate": "2025-09-21",
           "endDate": "2025-09-30",
+          "dueDate": "2025-09-25",
           "order": 1,
           "xpReward": 35,
           "difficulty": "medium"
@@ -43,6 +45,7 @@
           "externalLink": "https://www.cetus.zone",
           "startDate": "2025-09-12",
           "endDate": "2025-09-25",
+          "dueDate": "2025-09-28",
           "order": 0,
           "xpReward": 30,
           "difficulty": "medium"
@@ -58,6 +61,7 @@
           "externalLink": "https://haedal.fi",
           "startDate": "2025-09-15",
           "endDate": "2025-09-29",
+          "dueDate": "2025-09-30",
           "order": 0,
           "xpReward": 20,
           "difficulty": "easy"
@@ -73,6 +77,7 @@
           "externalLink": "https://bluefin.io",
           "startDate": "2025-08-30",
           "endDate": "2025-09-05",
+          "dueDate": "2025-09-20",
           "order": 0,
           "xpReward": 15,
           "difficulty": "easy"
@@ -88,6 +93,7 @@
           "externalLink": "https://momentum.fi",
           "startDate": "2025-09-18",
           "endDate": "2025-10-02",
+          "dueDate": "2025-10-05",
           "order": 0,
           "xpReward": 40,
           "difficulty": "hard"

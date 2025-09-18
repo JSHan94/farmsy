@@ -46,6 +46,7 @@ export interface Task {
   externalLink?: string
   startDate?: string
   endDate?: string
+  dueDate?: string // For calendar integration
   order?: number
   xpReward: number
   difficulty: TaskDifficulty
