@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Sparkles, Trophy, Star, Zap } from 'lucide-react'
+import { Sparkles, Trophy, Star, Zap, Droplets } from 'lucide-react'
 import styles from './TaskCompletionCelebration.module.css'
 
 interface TaskCompletionCelebrationProps {
@@ -60,11 +60,11 @@ export function TaskCompletionCelebration({ isVisible, taskTitle, onComplete }: 
                   '--y-offset': `${Math.floor(index / 4) * -30}px`
                 } as React.CSSProperties}
               >
-                <Star className={styles.particleIcon} />
+                <Droplets className={styles.dropletsIcon} />
               </div>
             ))}
           </div>
-
+            
           {/* Ripple effect */}
           <div className={styles.rippleEffect}>
             <div className={styles.ripple} />

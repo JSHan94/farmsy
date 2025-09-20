@@ -1,4 +1,4 @@
-import { Plus, Star, CheckCircle, Circle } from "lucide-react"
+import { Plus, Droplets, CheckCircle, Circle } from "lucide-react"
 import { Button } from "./Button"
 import styles from './ExploreTaskCard.module.css'
 
@@ -54,7 +54,7 @@ export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false }: Explo
       <div className={styles.taskActions}>
         <div className={styles.pointsSection}>
           <div className={styles.pointsBadge}>
-            <Star className={styles.pointsIcon} />
+            <Droplets className={styles.dropletsIcon} />
             <span className={styles.pointsValue}>{task.droplets} droplets</span>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false }: Explo
           ) : (
             <>
               <Plus className={styles.buttonIcon} />
-              Add to Backlog
+              Backlog
             </>
           )}
         </Button>

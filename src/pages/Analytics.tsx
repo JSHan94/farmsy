@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, Zap, Shield, Coins, Heart, Users2, Camera } from "lucide-react"
+import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, Zap, Shield, Coins, Heart, Users2, Camera, Droplets } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
@@ -181,7 +181,7 @@ export function Analytics() {
                   <CardHeader className={styles.characterHeader}>
                     <div className={styles.characterHeaderContent}>
                       <div className={styles.characterIconWrapper}>
-                        <Star className={styles.characterIcon} />
+                        <Droplets className={styles.dropletsIcon} />
                       </div>
                       <div>
                         <CardTitle className={styles.characterTitle}>Your Character</CardTitle>
