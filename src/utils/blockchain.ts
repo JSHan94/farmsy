@@ -140,3 +140,30 @@ export const generateTaskId = (blockchainId: BlockchainId): string => {
   const random = Math.floor(Math.random() * 1000)
   return `${blockchainId}-${timestamp}-${random}`
 }
+
+// Helper to get protocol image with fallback
+export const getProtocolImage = (protocolName: string): string => {
+  const protocol = getAllProtocols()[protocolName]
+
+  // If protocol has an icon defined, return it
+  if (protocol?.icon) {
+    return protocol.icon
+  }
+
+  // Create a dummy SVG data URL based on protocol initials
+  const initials = protocolName.slice(0, 2).toUpperCase()
+  const colors = ['#4DA2FF', '#2ECC71', '#E74C3C', '#F1C40F', '#9B59B6', '#E67E22']
+  const colorIndex = protocolName.charCodeAt(0) % colors.length
+  const color = colors[colorIndex]
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <rect width="100" height="100" rx="20" fill="${color}"/>
+      <text x="50" y="50" font-family="Arial, sans-serif" font-size="40" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">
+        ${initials}
+      </text>
+    </svg>
+  `
+
+  return `data:image/svg+xml;base64,${btoa(svg)}`
+}

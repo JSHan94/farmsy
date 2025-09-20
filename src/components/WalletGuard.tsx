@@ -1,7 +1,8 @@
 import { ReactNode } from 'react'
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { ConnectButton } from '@mysten/dapp-kit'
-import { Wallet, User } from 'lucide-react'
+import { Wallet, User, AlertCircle } from 'lucide-react'
+import { useZkLogin } from '../hooks/useZkLogin'
 import styles from './WalletGuard.module.css'
 
 interface WalletGuardProps {
@@ -10,16 +11,26 @@ interface WalletGuardProps {
 
 export function WalletGuard({ children }: WalletGuardProps) {
   const currentAccount = useCurrentAccount()
+  const {
+    session: zkLoginSession,
+    isLoading: zkLoginLoading,
+    error: zkLoginError,
+    configError: zkLoginConfigError,
+    initiateGoogleLogin
+  } = useZkLogin()
+
+  // User is considered authenticated if they have either a wallet connection or zkLogin session
+  const isAuthenticated = currentAccount || zkLoginSession?.isAuthenticated
 
   return (
     <div className={styles.container}>
       {/* Main content with conditional blur - only affects Dashboard, Analytics, Explore, Settings */}
-      <div className={!currentAccount ? styles.blurred : styles.content}>
+      <div className={!isAuthenticated ? styles.blurred : styles.content}>
         {children}
       </div>
 
-      {/* Overlay when wallet is not connected - positioned only over main content */}
-      {!currentAccount && (
+      {/* Overlay when user is not authenticated - positioned only over main content */}
+      {!isAuthenticated && (
         <div className={styles.overlay}>
           <div className={styles.connectCard}>
             <div className={styles.iconContainer}>
@@ -27,39 +38,41 @@ export function WalletGuard({ children }: WalletGuardProps) {
             </div>
             <div className={styles.buttonContainer}>
               <ConnectButton
-                connectText="Connect Wallet"
-                style={{
-                  background: 'hsl(var(--primary))',
-                  color: 'hsl(var(--primary-foreground))',
-                  border: 'none',
-                  borderRadius: '16px',
-                  padding: '16px 32px',
-                  fontSize: '16px',
-                  fontWeight: '600',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  minHeight: '52px',
-                  minWidth: '200px',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 6px 20px rgba(var(--primary), 0.3), 0 2px 8px rgba(0, 0, 0, 0.1)',
-                  transform: 'translateY(0)',
-                  position: 'relative',
-                  marginBottom: '12px'
-                }}
+                connectText="Connect with Wallet"
+                className={styles.walletConnectButton}
               />
               <button
                 className={styles.zkLoginButton}
-                onClick={() => {
-                  // TODO: Implement zkLogin connection logic
-                  console.log('zkLogin connection clicked')
-                }}
+                onClick={initiateGoogleLogin}
+                disabled={zkLoginLoading || !!zkLoginConfigError}
               >
-                <User size={20} />
-                Connect with zkLogin
+                {zkLoginLoading ? (
+                  <>
+                    <div className={styles.spinner} />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    {/* <User size={20} /> */}
+                    Connect with zkLogin
+                  </>
+                )}
               </button>
+
+              {/* Error Messages */}
+              {zkLoginConfigError && (
+                <div className={styles.errorMessage}>
+                  <AlertCircle size={16} />
+                  <span>Configuration Error: {zkLoginConfigError}</span>
+                </div>
+              )}
+
+              {zkLoginError && (
+                <div className={styles.errorMessage}>
+                  <AlertCircle size={16} />
+                  <span>{zkLoginError}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

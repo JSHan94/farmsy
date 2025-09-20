@@ -14,6 +14,7 @@ interface TaskContextType {
   updateTask: (updatedTask: Task) => void
   moveTask: (taskId: string, newStatus: 'backlog' | 'todo' | 'doing' | 'done', previousStatus?: 'backlog' | 'todo' | 'doing' | 'done') => void
   deleteTask: (taskId: string) => void
+  resetTasks: () => void
   getTaskById: (taskId: string) => (Task & { color: string }) | undefined
   getTasksByStatus: (status: 'backlog' | 'todo' | 'doing' | 'done') => (Task & { color: string })[]
   getTasksByProtocol: (protocol: string) => (Task & { color: string })[]
@@ -81,6 +82,18 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     setTasks(prev => prev.filter(task => task.id !== taskId))
   }
 
+  const resetTasks = () => {
+    // Reset all tasks to initial state (all available/backlog)
+    const initialTasks = getAllTasks()
+    const resetTasks = initialTasks.map(task => ({
+      ...task,
+      status: 'available' as const
+    }))
+    const enrichedTasks = enrichTasksWithProtocolData(resetTasks)
+    setTasks(enrichedTasks)
+    persistTasks(resetTasks)
+  }
+
   const getTaskById = (taskId: string) => {
     return tasks.find(task => task.id === taskId)
   }
@@ -118,6 +131,7 @@ export function TaskProvider({ children }: { children: React.ReactNode }) {
     updateTask,
     moveTask,
     deleteTask,
+    resetTasks,
     getTaskById,
     getTasksByStatus,
     getTasksByProtocol,

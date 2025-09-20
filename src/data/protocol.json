@@ -67,7 +67,7 @@
           "color": "bg-orange-50 border-orange-500",
           "brandColor": "#FF6B35",
           "symbol": "OT",
-          "icon": "/overtake.svg",
+          "icon": "/overtake.png",
           "category": "dex"
         },
         "Walrus": {

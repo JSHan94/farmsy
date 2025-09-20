@@ -44,9 +44,9 @@ export function AppSidebar() {
         <div className={styles.sidebarHeader}>
           <div className={styles.brandContainer}>
             <div className={styles.brandIcon}>
-              <Compass className="h-6 w-6 text-white" />
+              <img src="/suimming.png" alt="Suimming" className="h-6 w-6" />
             </div>
-            <h2 className={styles.brandTitle}>Farmsy</h2>
+            <h2 className={styles.brandTitle}>Suimming</h2>
           </div>
         </div>
 

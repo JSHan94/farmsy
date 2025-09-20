@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useCurrentAccount, useDisconnectWallet, useConnectWallet } from '@mysten/dapp-kit'
+import { getCharacterForLevel, checkCharacterEvolution, type CharacterStage } from '../utils/characterEvolution'
 
 interface UserData {
   address?: string
   currentXP: number
   currentLevel: number
+  currentCharacter?: string
   connectedAt?: number
   lastSeen?: number
 }
@@ -20,14 +22,15 @@ interface PersistenceContextType {
 }
 
 const STORAGE_KEYS = {
-  USER_DATA: 'farmsy_user_data',
-  TASKS: 'farmsy_tasks',
-  WALLET_PREFERENCE: 'farmsy_wallet_preference'
+  USER_DATA: 'suimming_user_data',
+  TASKS: 'suimming_tasks',
+  WALLET_PREFERENCE: 'suimming_wallet_preference'
 } as const
 
 const initialUserData: UserData = {
   currentXP: 0,
-  currentLevel: 1
+  currentLevel: 1,
+  currentCharacter: '/otter1.mp4'
 }
 
 const PersistenceContext = createContext<PersistenceContextType | undefined>(undefined)
@@ -224,24 +227,57 @@ export function usePersistence() {
 // Hook for XP system with persistence
 export function usePersistedXPSystem() {
   const { userData, setUserData, isConnected } = usePersistence()
+  const [levelUpData, setLevelUpData] = useState<{
+    showLevelUp: boolean
+    newLevel: number
+    evolutionData?: CharacterStage | null
+  }>({
+    showLevelUp: false,
+    newLevel: 1,
+    evolutionData: null
+  })
 
   const gainXP = (amount: number) => {
+    const oldLevel = userData.currentLevel
     const newXP = userData.currentXP + amount
     const newLevel = Math.floor(newXP / 100) + 1
 
+    // Check for character evolution
+    const evolutionData = checkCharacterEvolution(oldLevel, newLevel)
+    const newCharacter = evolutionData ? evolutionData.character : userData.currentCharacter
+
+    // Update user data
     setUserData({
       currentXP: newXP,
-      currentLevel: newLevel
+      currentLevel: newLevel,
+      currentCharacter: newCharacter || getCharacterForLevel(newLevel).character
     })
+
+    // Show level up animation if level increased
+    if (newLevel > oldLevel) {
+      setLevelUpData({
+        showLevelUp: true,
+        newLevel,
+        evolutionData
+      })
+    }
+  }
+
+  const closeLevelUpAnimation = () => {
+    setLevelUpData(prev => ({ ...prev, showLevelUp: false }))
   }
 
   const xpForNextLevel = userData.currentLevel * 100
+  const currentCharacter = userData.currentCharacter || getCharacterForLevel(userData.currentLevel).character
 
   return {
     currentXP: userData.currentXP,
     currentLevel: userData.currentLevel,
+    currentCharacter,
     xpForNextLevel,
     gainXP,
-    isConnected
+    isConnected,
+    levelUpData,
+    closeLevelUpAnimation
   }
 }

@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react"
+import { useState, useMemo, useRef, useCallback } from "react"
 import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Zap, Heart, Users2, Camera, Droplets } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { useTaskContext } from "../contexts/TaskContext"
-import { useXPSystem } from "../components/XPProgressBar"
+import { usePersistedXPSystem } from "../contexts/PersistenceContext"
 import { getAllProtocols } from "../utils/blockchain"
 import { CharacterImageModal } from "../components/CharacterImageModal"
 import styles from './Analytics.module.css'
@@ -13,11 +13,12 @@ const protocolConfig = getAllProtocols()
 
 export function Analytics() {
   const { tasks, getTaskStatistics } = useTaskContext()
-  const { currentXP, currentLevel, xpForNextLevel } = useXPSystem(150, 2)
+  const { currentXP, currentLevel, currentCharacter, xpForNextLevel } = usePersistedXPSystem()
   const [timeRange, setTimeRange] = useState('7d')
   const [activeTab, setActiveTab] = useState('overview')
-  const [characterImage, setCharacterImage] = useState('/otter1.mp4')
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
+  const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 })
 
   const stats = getTaskStatistics()
 
@@ -108,8 +109,49 @@ export function Analytics() {
   }
 
   const handleImageSelect = (imagePath: string) => {
-    setCharacterImage(imagePath)
+    // This will be handled by the PersistenceContext
+    // The character image is now automatically determined by level
   }
+
+  const calculateOverlayPosition = useCallback((element: HTMLElement) => {
+    const rect = element.getBoundingClientRect()
+    const viewportHeight = window.innerHeight
+    const viewportWidth = window.innerWidth
+    const overlayHeight = 300 // max-height from CSS
+    const overlayWidth = 280 // min-width from CSS
+
+    // Calculate optimal position
+    let top = rect.bottom + 8 // Default: below the element
+    let left = rect.left
+
+    // If overlay would go below viewport, position it above
+    if (top + overlayHeight > viewportHeight) {
+      top = rect.top - overlayHeight - 8
+    }
+
+    // If overlay would go beyond right edge, align to right
+    if (left + overlayWidth > viewportWidth) {
+      left = viewportWidth - overlayWidth - 16
+    }
+
+    // Ensure it doesn't go beyond left edge
+    if (left < 16) {
+      left = 16
+    }
+
+    return { top, left }
+  }, [])
+
+  const handleCategoryHover = useCallback((category: string, event: React.MouseEvent<HTMLDivElement>) => {
+    const element = event.currentTarget
+    const position = calculateOverlayPosition(element)
+    setOverlayPosition(position)
+    setHoveredCategory(category)
+  }, [calculateOverlayPosition])
+
+  const handleCategoryLeave = useCallback(() => {
+    setHoveredCategory(null)
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -166,6 +208,8 @@ export function Analytics() {
                             key={category}
                             className={styles.categoryItem}
                             title={`Hover to see completed ${category} tasks`}
+                            onMouseEnter={(e) => handleCategoryHover(category, e)}
+                            onMouseLeave={handleCategoryLeave}
                           >
                             <div className={styles.categoryHeader}>
                               <div className={styles.categoryIconWrapper}>
@@ -189,43 +233,67 @@ export function Analytics() {
                               </div>
                             </div>
 
-                            {/* Hover overlay showing completed tasks */}
-                            <div className={styles.categoryHoverOverlay}>
-                              <div className={styles.hoverContent}>
-                                <h5 className={styles.hoverTitle}>Completed {category.charAt(0).toUpperCase() + category.slice(1)} Tasks</h5>
-                                <div className={styles.hoverTaskList}>
-                                  {completedTasks.length > 0 ? (
-                                    completedTasks.slice(0, 5).map((task) => (
-                                      <div key={task.id} className={styles.hoverTaskItem}>
-                                        <div className={styles.hoverTaskInfo}>
-                                          <span className={styles.hoverTaskTitle}>{task.title}</span>
-                                          <span className={styles.hoverTaskProtocol}>{task.protocol}</span>
-                                        </div>
-                                        <div className={styles.hoverTaskXp}>
-                                          <Award className={styles.hoverXpIcon} />
-                                          <span>+{task.xpReward}</span>
-                                        </div>
-                                      </div>
-                                    ))
-                                  ) : (
-                                    <div className={styles.noTasksMessage}>
-                                      <Activity className={styles.noTasksIcon} />
-                                      <span>No completed tasks yet</span>
-                                    </div>
-                                  )}
-                                  {completedTasks.length > 5 && (
-                                    <div className={styles.moreTasksIndicator}>
-                                      +{completedTasks.length - 5} more tasks
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
                           </div>
                         )
                       })}
                     </div>
                   </CardContent>
+
+                  {/* Fixed position overlay for completed tasks */}
+                  {hoveredCategory && (
+                    <div
+                      className={styles.categoryHoverOverlay}
+                      style={{
+                        top: `${overlayPosition.top}px`,
+                        left: `${overlayPosition.left}px`,
+                        opacity: 1,
+                        visibility: 'visible',
+                        transform: 'translateY(0)',
+                        pointerEvents: 'auto'
+                      }}
+                    >
+                      <div className={styles.hoverContent}>
+                        {(() => {
+                          const categoryData = analyticsData.exploreCategories.find(c => c.category === hoveredCategory)
+                          if (!categoryData) return null
+
+                          return (
+                            <>
+                              <h5 className={styles.hoverTitle}>
+                                Completed {hoveredCategory.charAt(0).toUpperCase() + hoveredCategory.slice(1)} Tasks
+                              </h5>
+                              <div className={styles.hoverTaskList}>
+                                {categoryData.completedTasks.length > 0 ? (
+                                  categoryData.completedTasks.slice(0, 5).map((task) => (
+                                    <div key={task.id} className={styles.hoverTaskItem}>
+                                      <div className={styles.hoverTaskInfo}>
+                                        <span className={styles.hoverTaskTitle}>{task.title}</span>
+                                        <span className={styles.hoverTaskProtocol}>{task.protocol}</span>
+                                      </div>
+                                      <div className={styles.hoverTaskXp}>
+                                        <Award className={styles.hoverXpIcon} />
+                                        <span>+{task.xpReward}</span>
+                                      </div>
+                                    </div>
+                                  ))
+                                ) : (
+                                  <div className={styles.noTasksMessage}>
+                                    <Activity className={styles.noTasksIcon} />
+                                    <span>No completed tasks yet</span>
+                                  </div>
+                                )}
+                                {categoryData.completedTasks.length > 5 && (
+                                  <div className={styles.moreTasksIndicator}>
+                                    +{categoryData.completedTasks.length - 5} more tasks
+                                  </div>
+                                )}
+                              </div>
+                            </>
+                          )
+                        })()}
+                      </div>
+                    </div>
+                  )}
                 </Card>
 
                 {/* Character Evolution Card */}
@@ -245,7 +313,7 @@ export function Analytics() {
                     <div className={styles.characterImage}>
                       <div className={styles.characterImageWrapper}>
                         <video
-                          src={characterImage}
+                          src={currentCharacter}
                           autoPlay
                           loop
                           muted
@@ -561,7 +629,7 @@ export function Analytics() {
         isOpen={isImageModalOpen}
         onClose={() => setIsImageModalOpen(false)}
         onImageSelect={handleImageSelect}
-        currentImage={characterImage}
+        currentImage={currentCharacter}
       />
     </div>
   )

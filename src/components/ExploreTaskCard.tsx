@@ -21,6 +21,11 @@ interface ExploreTaskCardProps {
   isSuccess?: boolean
 }
 
+// Helper function to check if logo is a file path
+const isImagePath = (logo: string): boolean => {
+  return logo.startsWith('/') && (logo.includes('.png') || logo.includes('.svg') || logo.includes('.jpg') || logo.includes('.jpeg') || logo.includes('.webp'))
+}
+
 export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false, isAnimating = false, isSuccess = false }: ExploreTaskCardProps) {
   return (
     <div className={`${styles.taskCard} ${!task.active ? styles.taskCardInactive : ''} ${isAnimating ? styles.taskCardAnimating : ''} ${isSuccess ? styles.success : ''}`}>
@@ -28,7 +33,15 @@ export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false, isAnima
       <div className={styles.taskInfo}>
         <div className={styles.logoSection}>
           <div className={styles.logo}>
-            {task.logo}
+            {isImagePath(task.logo) ? (
+              <img
+                src={task.logo}
+                alt={`${task.protocol} logo`}
+                className={styles.logoImage}
+              />
+            ) : (
+              task.logo
+            )}
           </div>
           <div className={styles.statusIndicator}>
             {task.active ? (
@@ -57,7 +70,7 @@ export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false, isAnima
         <div className={styles.pointsSection}>
           <div className={styles.pointsBadge}>
             <Droplets className={styles.dropletsIcon} />
-            <span className={styles.pointsValue}>{task.droplets} droplets</span>
+            <span className={styles.pointsValue}>{task.droplets}</span>
           </div>
         </div>
 

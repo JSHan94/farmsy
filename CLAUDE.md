@@ -29,7 +29,7 @@ Output format: <format>
 
 ## Project Overview
 
-Farmsy is a gamified, multi-blockchain task management application built with React, TypeScript, and Vite.
+Suimming is a gamified, multi-blockchain task management application built with React, TypeScript, and Vite.
 
 Users can manage and track tasks through a Task Tracker system that supports multiple blockchain ecosystems, with initial focus on Sui dApps.
 

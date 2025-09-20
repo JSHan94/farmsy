@@ -7,17 +7,20 @@ import { TaskCalendar } from "../components/TaskCalendar"
 import { TaskCompletionCelebration } from "../components/TaskCompletionCelebration"
 import { PointsAnimationOverlay } from "../components/PointsAnimationOverlay"
 import { useTaskContext } from "../contexts/TaskContext"
+import { usePersistedXPSystem } from "../contexts/PersistenceContext"
+import { useDashboard } from "../contexts/DashboardContext"
+import { toast } from "sonner"
 import styles from './Dashboard.module.css'
 
 
 export function Dashboard() {
   const { tasks, addTask, updateTask, moveTask } = useTaskContext()
+  const { currentXP, currentLevel, gainXP } = usePersistedXPSystem()
+  const { categoryFilter, setCategoryFilter, activeTab, setActiveTab } = useDashboard()
   const [celebrationVisible, setCelebrationVisible] = useState(false)
   const [completedTaskTitle, setCompletedTaskTitle] = useState('')
   const [pointsAnimationVisible, setPointsAnimationVisible] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
-  const [categoryFilter, setCategoryFilter] = useState('all')
-  const [activeTab, setActiveTab] = useState('board')
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   // Filter tasks based on category selection
@@ -30,8 +33,41 @@ export function Dashboard() {
     if (newStatus === 'done' && previousStatus !== 'done') {
       const completedTask = tasks.find(task => task.id === taskId)
       if (completedTask) {
+        const xpReward = completedTask.xpReward || 25
         setCompletedTaskTitle(completedTask.title)
-        setEarnedPoints(completedTask.xpReward || 25)
+        setEarnedPoints(xpReward)
+
+        // Award XP points
+        const oldLevel = currentLevel
+        gainXP(xpReward)
+
+        // Calculate new level after XP gain
+        const newXP = currentXP + xpReward
+        const newLevel = Math.floor(newXP / 100) + 1
+        const xpInCurrentLevel = newXP % 100
+
+        // Show XP gain toast with current progress
+        toast.success(
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ fontWeight: 'bold' }}>Gain +{xpReward} XP!</div>
+            <div style={{ fontSize: '12px', opacity: 0.8 }}>
+              XP: {xpInCurrentLevel}/{100} (level {newLevel})
+            </div>
+            {newLevel > oldLevel && (
+              <div style={{ fontSize: '12px', color: '#fbbf24' }}>
+                🎉 Level Up! You have reached level {newLevel}!
+              </div>
+            )}
+          </div>,
+          {
+            duration: 1000,  // Always disappear after 1 second
+            style: {
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              border: 'none'
+            }
+          }
+        )
 
         // Show points animation first, then celebration
         setPointsAnimationVisible(true)

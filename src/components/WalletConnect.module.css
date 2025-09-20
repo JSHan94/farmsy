@@ -28,3 +28,45 @@
     display: none;
   }
 }
+
+.zkLoginConnection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: inherit;
+}
+
+.zkLoginInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zkLoginText {
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+}
+
+.logoutButton {
+  padding: 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.logoutButton:hover {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .zkLoginText {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

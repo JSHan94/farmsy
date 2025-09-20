@@ -4,9 +4,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { useEffect, useState } from 'react'
 import styles from './TaskCard.module.css'
 import { Task } from '../types/blockchain'
-import { getAllProtocols } from '../utils/blockchain'
-
-const protocolConfig = getAllProtocols()
+import { getProtocolImage } from '../utils/blockchain'
 
 // Water drop sound generation
 const playWaterDropSound = () => {
@@ -114,8 +112,6 @@ export function TaskCard({ task, onEdit, showDescription = true }: TaskCardProps
     onEdit?.(task)
   }
 
-  const protocol = protocolConfig[task.protocol]
-  
   const formatDate = (dateString?: string) => {
     if (!dateString) return null
     const date = new Date(dateString)
@@ -144,9 +140,15 @@ export function TaskCard({ task, onEdit, showDescription = true }: TaskCardProps
           <div className={styles.titleSection}>
             <div className={styles.protocolLogo}>
               <img
-                src={protocol.icon}
-                alt={`${protocol.name} logo`}
+                src={getProtocolImage(task.protocol)}
+                alt={`${task.protocol} logo`}
                 className={styles.protocolIcon}
+                onError={(e) => {
+                  // If the image fails to load, use the fallback
+                  const target = e.target as HTMLImageElement
+                  target.onerror = null // Prevent infinite loop
+                  target.src = getProtocolImage('Unknown')
+                }}
               />
             </div>
             <h4 className={styles.taskTitle}>{task.title}</h4>

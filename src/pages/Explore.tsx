@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react"
 import { Search, Filter, Grid, List, Users, Calendar, Gamepad2 } from "lucide-react"
-import { Button } from "../components/Button"
-import { Input } from "../components/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { ExploreTaskCard, type ExploreTask } from "../components/ExploreTaskCard"
 import { useTaskContext } from "../contexts/TaskContext"
 import { type Task, type ExploreCategory } from "../types/blockchain"
+import { toast } from "sonner"
 import styles from './Explore.module.css'
 
 type CategoryType = 'all' | ExploreCategory
@@ -52,14 +51,8 @@ const categories: CategoryInfo[] = [
 // Helper function to get protocol icons
 const getProtocolIcon = (protocol: string): string => {
   const icons: Record<string, string> = {
-    'Overtake': '🔄',
-    'Scallop': '🐚',
-    'Walrus': '🐋',
-    'Cetus': '🐋',
-    'Haedal': '/logo-sui.png',
-    'Kriya': '📈',
-    'Momentum': '🚀',
-    'Bluefin': '🌊',
+    'Overtake': '/overtake.png',
+    'Scallop': '/scallop.svg',
     'Twitter': '🐦',
     'Discord': '💬',
     'Telegram': '✈️',
@@ -124,6 +117,15 @@ export function Explore() {
       )
     }
 
+    // Sort tasks to prioritize protocol category first
+    filtered = filtered.sort((a, b) => {
+      // Protocol tasks come first
+      if (a.category === 'protocol' && b.category !== 'protocol') return -1
+      if (a.category !== 'protocol' && b.category === 'protocol') return 1
+      // For tasks with same category priority, maintain original order
+      return 0
+    })
+
     return filtered
   }, [allExploreTasks, selectedCategory, searchQuery])
 
@@ -156,22 +158,24 @@ export function Explore() {
       navigator.vibrate(50) // Brief haptic feedback
     }
 
-    // Add immediate success feedback
+    // Show success toast notification
+    toast.success('Successfully added to backlog!', {
+      duration: 1000,
+      style: {
+        backgroundColor: '#10b981',
+        color: 'white',
+        border: 'none'
+      }
+    })
+
+    // Add immediate success feedback - this changes button to "Added"
     setSuccessTasks(prev => {
       console.log('✅ Adding success state for:', exploreTask.id)
       return new Set(prev).add(exploreTask.id)
     })
 
-    // Start swap animation after success feedback
-    setTimeout(() => {
-      console.log('🚀 Starting swipe animation for:', exploreTask.id)
-      setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
-      setSuccessTasks(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(exploreTask.id)
-        return newSet
-      })
-    }, 600) // 더 긴 지연으로 성공 애니메이션을 충분히 보여줌
+    // Mark as added immediately so button stays as "Added"
+    setAddedTasks(prev => new Set(prev).add(exploreTask.id))
 
     // Find the original task in TaskContext
     const originalTask = tasks.find(task => task.id === exploreTask.id)
@@ -180,21 +184,29 @@ export function Explore() {
     // Update the task status from 'available' to 'backlog'
     const updatedTask = { ...originalTask, status: 'backlog' as const }
 
-    // Update task status after success feedback but before main animation
+    // Update task status immediately
+    updateTask(updatedTask)
+
+    // Start animation after showing "Added" button for 1 second
     setTimeout(() => {
-      updateTask(updatedTask)
-    }, 500)
+      console.log('🚀 Starting swipe animation for:', exploreTask.id)
+      setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
+      setSuccessTasks(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(exploreTask.id)
+        return newSet
+      })
+    }, 1000) // Wait 1 second before starting animation
 
     // After animation completes, remove from visible tasks
     setTimeout(() => {
       console.log('🏁 Animation complete, removing task:', exploreTask.id)
-      setAddedTasks(prev => new Set(prev).add(exploreTask.id))
       setAnimatingTasks(prev => {
         const newSet = new Set(prev)
         newSet.delete(exploreTask.id)
         return newSet
       })
-    }, 2500) // Updated to match new animation duration (2.2s + buffer)
+    }, 2000) // Total 2 seconds (1s wait + 1s for card to disappear)
   }
 
   return (
