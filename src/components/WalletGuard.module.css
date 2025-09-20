@@ -83,8 +83,10 @@
 
 .buttonContainer {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 8px;
 }
 
 .walletIcon {
@@ -140,6 +142,37 @@
   margin-right: auto;
 }
 
+.zkLoginButton {
+  background: linear-gradient(145deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.8) 100%);
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  border-radius: 16px;
+  padding: 16px 32px;
+  fontSize: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  min-height: 52px;
+  min-width: 200px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.zkLoginButton:hover {
+  background: linear-gradient(145deg, hsl(var(--muted) / 0.8) 0%, hsl(var(--muted) / 0.6) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.zkLoginButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .overlay {
@@ -168,5 +201,11 @@
 
   .iconContainer {
     margin-bottom: 12px;
+  }
+
+  .zkLoginButton {
+    min-width: 180px;
+    padding: 14px 28px;
+    font-size: 15px;
   }
 }
