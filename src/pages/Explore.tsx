@@ -4,7 +4,7 @@ import { Button } from "../components/Button"
 import { Input } from "../components/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { ExploreTaskCard, type ExploreTask } from "../components/ExploreTaskCard"
-import { useTaskManager } from "../hooks/useTaskManager"
+import { useTaskContext } from "../contexts/TaskContext"
 import exploreTasksData from "../data/exploreTasks.json"
 import styles from './Explore.module.css'
 
@@ -50,10 +50,11 @@ const categories: CategoryInfo[] = [
 ]
 
 export function Explore() {
-  const { addTask } = useTaskManager()
+  const { addTask } = useTaskContext()
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [addedTasks, setAddedTasks] = useState<Set<string>>(new Set())
+  const [animatingTasks, setAnimatingTasks] = useState<Set<string>>(new Set())
 
   // Flatten all tasks from the JSON data
   const allExploreTasks: ExploreTask[] = useMemo(() => {
@@ -105,6 +106,9 @@ export function Explore() {
   }, [allExploreTasks])
 
   const handleAddToBacklog = (exploreTask: ExploreTask) => {
+    // Start animation
+    setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
+
     // Convert explore task to dashboard task format
     const newTask = {
       title: exploreTask.name,
@@ -120,8 +124,18 @@ export function Explore() {
       status: 'backlog' as const
     }
 
+    // Add task to global state
     addTask(newTask)
-    setAddedTasks(prev => new Set(prev).add(exploreTask.id))
+
+    // After animation completes, remove from visible tasks
+    setTimeout(() => {
+      setAddedTasks(prev => new Set(prev).add(exploreTask.id))
+      setAnimatingTasks(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(exploreTask.id)
+        return newSet
+      })
+    }, 600) // Animation duration
   }
 
   return (
@@ -152,14 +166,17 @@ export function Explore() {
             <TabsContent key={category.id} value={category.id} className={styles.tabContent}>
               <div className={styles.tasksList}>
                 {filteredTasks.length > 0 ? (
-                  filteredTasks.map((task) => (
-                    <ExploreTaskCard
-                      key={task.id}
-                      task={task}
-                      onAddToBacklog={handleAddToBacklog}
-                      isAdded={addedTasks.has(task.id)}
-                    />
-                  ))
+                  filteredTasks
+                    .filter(task => !addedTasks.has(task.id)) // Hide tasks that have been added
+                    .map((task) => (
+                      <ExploreTaskCard
+                        key={task.id}
+                        task={task}
+                        onAddToBacklog={handleAddToBacklog}
+                        isAdded={addedTasks.has(task.id)}
+                        isAnimating={animatingTasks.has(task.id)}
+                      />
+                    ))
                 ) : (
                   <div className={styles.emptyState}>
                     <div className={styles.emptyStateContent}>

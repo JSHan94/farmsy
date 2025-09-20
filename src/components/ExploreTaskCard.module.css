@@ -585,3 +585,19 @@
 .addButtonAdded {
   animation: addSuccess 0.3s ease-out;
 }
+
+/* Slide-out animation when task is being added to backlog */
+@keyframes slideOutRight {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.taskCardAnimating {
+  animation: slideOutRight 0.6s ease-in-out forwards;
+}

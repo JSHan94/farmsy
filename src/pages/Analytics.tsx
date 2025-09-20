@@ -3,7 +3,7 @@ import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, 
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
-import { useTaskManager } from "../hooks/useTaskManager"
+import { useTaskContext } from "../contexts/TaskContext"
 import { useXPSystem } from "../components/XPProgressBar"
 import { getAllProtocols } from "../utils/blockchain"
 import { CharacterImageModal } from "../components/CharacterImageModal"
@@ -12,7 +12,7 @@ import styles from './Analytics.module.css'
 const protocolConfig = getAllProtocols()
 
 export function Analytics() {
-  const { tasks, getTaskStatistics } = useTaskManager()
+  const { tasks, getTaskStatistics } = useTaskContext()
   const { currentXP, currentLevel, xpForNextLevel } = useXPSystem(150, 2)
   const [timeRange, setTimeRange] = useState('7d')
   const [activeTab, setActiveTab] = useState('overview')

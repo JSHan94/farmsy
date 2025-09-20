@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { TaskBoard } from "../components/TaskBoard"
 import { TaskCalendar } from "../components/TaskCalendar"
 import { TaskCompletionCelebration } from "../components/TaskCompletionCelebration"
-import { useTaskManager } from "../hooks/useTaskManager"
+import { useTaskContext } from "../contexts/TaskContext"
 import { getAllProtocols, getFilterOptions } from "../utils/blockchain"
 import styles from './Dashboard.module.css'
 
@@ -13,7 +13,7 @@ const protocolConfig = getAllProtocols()
 const filterOptions = getFilterOptions()
 
 export function Dashboard() {
-  const { tasks, addTask, updateTask, moveTask } = useTaskManager()
+  const { tasks, addTask, updateTask, moveTask } = useTaskContext()
   const [celebrationVisible, setCelebrationVisible] = useState(false)
   const [completedTaskTitle, setCompletedTaskTitle] = useState('')
   const [protocolFilter, setProtocolFilter] = useState('all')

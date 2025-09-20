@@ -17,11 +17,12 @@ interface ExploreTaskCardProps {
   task: ExploreTask
   onAddToBacklog: (task: ExploreTask) => void
   isAdded?: boolean
+  isAnimating?: boolean
 }
 
-export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false }: ExploreTaskCardProps) {
+export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false, isAnimating = false }: ExploreTaskCardProps) {
   return (
-    <div className={`${styles.taskCard} ${!task.active ? styles.taskCardInactive : ''}`}>
+    <div className={`${styles.taskCard} ${!task.active ? styles.taskCardInactive : ''} ${isAnimating ? styles.taskCardAnimating : ''}`}>
       {/* Left Section: Logo and Task Info */}
       <div className={styles.taskInfo}>
         <div className={styles.logoSection}>
