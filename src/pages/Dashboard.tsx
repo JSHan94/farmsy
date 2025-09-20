@@ -1,32 +1,29 @@
 import { useState } from "react"
-import { CheckSquare, Plus, Search, Filter, Calendar, Grid } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import { Button } from "../components/ui/button"
-import { Input } from "../components/ui/input"
+import { Calendar, Grid } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { TaskBoard } from "../components/TaskBoard"
 import { TaskCalendar } from "../components/TaskCalendar"
 import { TaskCompletionCelebration } from "../components/TaskCompletionCelebration"
 import { useTaskManager } from "../hooks/useTaskManager"
+import { getAllProtocols, getFilterOptions } from "../utils/blockchain"
+import styles from './Dashboard.module.css'
+
+const protocolConfig = getAllProtocols()
+const filterOptions = getFilterOptions()
 
 export function Dashboard() {
   const { tasks, addTask, updateTask, moveTask } = useTaskManager()
   const [celebrationVisible, setCelebrationVisible] = useState(false)
   const [completedTaskTitle, setCompletedTaskTitle] = useState('')
-  const [searchTerm, setSearchTerm] = useState("")
+  const [protocolFilter, setProtocolFilter] = useState('all')
+  const [activeTab, setActiveTab] = useState('board')
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-  // Calculate task statistics
-  const totalTasks = tasks.length
-  const completedTasks = tasks.filter(task => task.status === 'done').length
-  const inProgressTasks = tasks.filter(task => task.status === 'doing').length
-  const pendingTasks = tasks.filter(task => task.status === 'todo' || task.status === 'backlog').length
-
-  // Filter tasks based on search term
-  const filteredTasks = tasks.filter(task =>
-    task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    task.protocol.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // Filter tasks based on protocol selection
+  const filteredTasks = protocolFilter === 'all'
+    ? tasks
+    : tasks.filter(task => task.protocol === protocolFilter)
 
   const handleMoveTask = (taskId: string, newStatus: 'backlog' | 'todo' | 'doing' | 'done', previousStatus?: 'backlog' | 'todo' | 'doing' | 'done') => {
     // Award XP and show celebration when task is completed (moved to 'done')
@@ -57,47 +54,97 @@ export function Dashboard() {
     // TODO: Create new task for selected date
   }
 
+  const handleTabChange = (newTab: string) => {
+    if (newTab !== activeTab && !isTransitioning) {
+      setIsTransitioning(true)
+
+      // Start fade out effect first
+      setTimeout(() => {
+        setActiveTab(newTab)
+      }, 100)
+
+      // Complete transition
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 400)
+    }
+  }
+
   return (
-    <div className="p-6 space-y-6">
-      {/* Page Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        </div>
+    <div className={styles.container}>
+      {/* Main Content */}
+      <div className={styles.mainContent}>
+        {/* TossInvest-style Tab Navigation */}
+        <Tabs value={activeTab} onValueChange={handleTabChange} className={styles.tabsContainer}>
+          <div className={styles.tabsNav}>
+            <div className={styles.tabsList}>
+              <TabsList className={styles.tabsListInner}>
+                <TabsTrigger value="board" className={styles.tabTrigger}>
+                  <Grid className={styles.tabIcon} />
+                  Board
+                </TabsTrigger>
+                <TabsTrigger value="calendar" className={styles.tabTrigger}>
+                  <Calendar className={styles.tabIcon} />
+                  Calendar
+                </TabsTrigger>
+              </TabsList>
+            </div>
+
+            {/* Protocol Filter */}
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>Filter by protocol:</span>
+              <Select value={protocolFilter} onValueChange={setProtocolFilter}>
+                <SelectTrigger className={styles.filterSelect}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {filterOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      <div className={styles.filterOption}>
+                        {option.value !== 'all' && (
+                          <div
+                            className={styles.filterColorSwatch}
+                            style={{
+                              backgroundColor: protocolConfig[option.value]?.brandColor || '#gray',
+                              borderColor: protocolConfig[option.value]?.brandColor || '#gray'
+                            }}
+                          />
+                        )}
+                        {option.label}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <TabsContent value="board" className={`${styles.tabContent} ${activeTab === 'board' ? styles.boardView : ''}`}>
+            <div className={`${styles.contentWrapper} ${isTransitioning ? styles.contentTransitioning : ''}`}>
+              <div className={`${styles.viewContent} ${isTransitioning ? styles.fadeOut : styles.fadeIn}`}>
+                <TaskBoard
+                  tasks={filteredTasks}
+                  onAddTask={addTask}
+                  onUpdateTask={updateTask}
+                  onMoveTask={handleMoveTask}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="calendar" className={`${styles.tabContent} ${activeTab === 'calendar' ? styles.calendarView : ''}`}>
+            <div className={`${styles.contentWrapper} ${isTransitioning ? styles.contentTransitioning : ''}`}>
+              <div className={`${styles.viewContent} ${isTransitioning ? styles.fadeOut : styles.fadeIn}`}>
+                <TaskCalendar
+                  tasks={filteredTasks}
+                  onTaskClick={handleTaskClick}
+                  onDateClick={handleDateClick}
+                />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
-
-
-      
-      {/* Tasks View Tabs */}
-      <Tabs defaultValue="board" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="board" className="flex items-center gap-2">
-            <Grid className="h-4 w-4" />
-            Board View
-          </TabsTrigger>
-          <TabsTrigger value="calendar" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            Calendar View
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="board" className="space-y-4">
-          <TaskBoard
-            tasks={filteredTasks}
-            onAddTask={addTask}
-            onUpdateTask={updateTask}
-            onMoveTask={handleMoveTask}
-          />
-        </TabsContent>
-
-        <TabsContent value="calendar" className="space-y-4">
-          <TaskCalendar
-            tasks={filteredTasks}
-            onTaskClick={handleTaskClick}
-            onDateClick={handleDateClick}
-          />
-        </TabsContent>
-      </Tabs>
 
       {/* Task Completion Celebration */}
       <TaskCompletionCelebration

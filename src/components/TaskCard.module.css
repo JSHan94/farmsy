@@ -1,12 +1,18 @@
 .taskCard {
   cursor: grab;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
   border-left-width: 4px;
   user-select: none;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   overflow: hidden;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
   width: 100%;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  height: 120px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
 }
 
 .taskCard:active {
@@ -21,33 +27,37 @@
 }
 
 .taskCard:hover {
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+  border-color: rgba(0, 102, 255, 0.2);
 }
 
 .cardContent {
-  padding: 1rem;
+  padding: 1.25rem;
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.25rem;
+  flex: 1;
 }
 
 /* Card Header */
 .cardHeader {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
+  align-items: flex-start;
+  margin-bottom: 0.25rem;
+  gap: 0.75rem;
 }
 
 .titleSection {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.75rem;
   flex: 1;
+  min-width: 0;
 }
 
 .protocolLogo {
@@ -62,6 +72,7 @@
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   flex-shrink: 0;
+  margin-top: 0.125rem;
 }
 
 .protocolIcon {
@@ -70,42 +81,65 @@
   object-fit: contain;
 }
 
-.linkButton {
-  padding: 0.25rem;
-  border-radius: 0.25rem;
-  transition: background-color 0.15s ease-in-out;
-  background: rgba(255, 255, 255, 0.8);
+.goButton {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
   border: none;
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+  color: white;
+  font-size: 0.625rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 102, 255, 0.2);
+  min-width: 1.75rem;
+  height: 1.5rem;
+  flex-shrink: 0;
 }
 
-.linkButton:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+.goButton:hover {
+  background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+  box-shadow: 0 4px 8px rgba(0, 102, 255, 0.3);
+  transform: translateY(-1px);
 }
 
-.linkIcon {
-  height: 0.875rem;
-  width: 0.875rem;
-  color: var(--color-muted-foreground);
+.goButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 102, 255, 0.2);
 }
 
 /* Task Content */
 .taskContent {
   flex: 1;
+  overflow: hidden;
+}
+
+/* Card Footer */
+.cardFooter {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .taskTitle {
   font-size: 0.875rem;
   font-weight: 600;
   margin: 0;
-  line-height: 1.25;
+  line-height: 1.4;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
 }
 
 .taskDescription {
@@ -113,6 +147,12 @@
   font-size: 0.75rem;
   line-height: 1.4;
   margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-wrap: break-word;
 }
 
 /* Date Range */
@@ -120,11 +160,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: auto;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
   font-size: 0.75rem;
   color: var(--color-muted-foreground);
+  flex: 1;
 }
 
 .startDate, .endDate {

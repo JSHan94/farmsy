@@ -4099,7 +4099,7 @@
   --accent-foreground: #030213;
   --destructive: #d4183d;
   --destructive-foreground: #fff;
-  --border: #0000001a;
+  --border: rgba(0, 0, 0, 0.15);
   --input: transparent;
   --input-background: #f3f3f5;
   --switch-background: #cbced4;

@@ -61,6 +61,22 @@
           "symbol": "KR",
           "icon": "/kriya.svg",
           "category": "derivatives"
+        },
+        "Overtake": {
+          "name": "Overtake",
+          "color": "bg-orange-50 border-orange-500",
+          "brandColor": "#FF6B35",
+          "symbol": "OT",
+          "icon": "/overtake.svg",
+          "category": "dex"
+        },
+        "Walrus": {
+          "name": "Walrus",
+          "color": "bg-purple-50 border-purple-500",
+          "brandColor": "#8B5CF6",
+          "symbol": "WL",
+          "icon": "/walrus.svg",
+          "category": "storage"
         }
       }
     }

@@ -1,0 +1,222 @@
+{
+  "categories": {
+    "protocol": {
+      "name": "Protocol",
+      "description": "Sui blockchain protocol tasks",
+      "tasks": [
+        {
+          "id": "protocol-1",
+          "name": "Swap tokens on Overtake",
+          "description": "Execute a SUI/USDC swap on Overtake DEX to experience seamless trading",
+          "points": 12,
+          "logo": "🔄",
+          "protocol": "Overtake",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-2",
+          "name": "Lend assets on Scallop",
+          "description": "Deposit SUI tokens into Scallop lending protocol and start earning interest",
+          "points": 15,
+          "logo": "🐚",
+          "protocol": "Scallop",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-3",
+          "name": "Store data on Walrus",
+          "description": "Upload and store data using Walrus decentralized storage network",
+          "points": 18,
+          "logo": "🐋",
+          "protocol": "Walrus",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-4",
+          "name": "Provide liquidity on Cetus",
+          "description": "Add liquidity to the SUI/USDC pool on Cetus AMM and earn trading fees",
+          "points": 20,
+          "logo": "🐋",
+          "protocol": "Cetus",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-5",
+          "name": "Stake SUI on Haedal",
+          "description": "Stake your SUI tokens on Haedal validator and earn staking rewards",
+          "points": 16,
+          "logo": "🌟",
+          "protocol": "Haedal",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-6",
+          "name": "Trade derivatives on Kriya",
+          "description": "Open a leveraged position on Kriya derivatives protocol",
+          "points": 25,
+          "logo": "📈",
+          "protocol": "Kriya",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-7",
+          "name": "Farm tokens on Momentum",
+          "description": "Participate in yield farming on Momentum to earn additional rewards",
+          "points": 14,
+          "logo": "🚀",
+          "protocol": "Momentum",
+          "active": true,
+          "category": "protocol"
+        },
+        {
+          "id": "protocol-8",
+          "name": "Perpetual trading on Bluefin",
+          "description": "Execute a perpetual trade on Bluefin with advanced trading features",
+          "points": 22,
+          "logo": "🌊",
+          "protocol": "Bluefin",
+          "active": false,
+          "category": "protocol"
+        }
+      ]
+    },
+    "social": {
+      "name": "Social",
+      "description": "Sui ecosystem social engagement tasks",
+      "tasks": [
+        {
+          "id": "social-1",
+          "name": "Share Sui ecosystem update",
+          "description": "Retweet the latest Sui ecosystem announcement to help spread awareness",
+          "points": 5,
+          "logo": "🐦",
+          "protocol": "Twitter",
+          "active": true,
+          "category": "social"
+        },
+        {
+          "id": "social-2",
+          "name": "Join Sui Discord",
+          "description": "Join the official Sui Discord server and introduce yourself to the community",
+          "points": 3,
+          "logo": "💬",
+          "protocol": "Discord",
+          "active": true,
+          "category": "social"
+        },
+        {
+          "id": "social-3",
+          "name": "Follow Sui Telegram",
+          "description": "Follow Sui's official Telegram channel for updates and announcements",
+          "points": 4,
+          "logo": "✈️",
+          "protocol": "Telegram",
+          "active": true,
+          "category": "social"
+        },
+        {
+          "id": "social-4",
+          "name": "Share Sui experience",
+          "description": "Write a Twitter thread about your experience building on Sui blockchain",
+          "points": 12,
+          "logo": "📝",
+          "protocol": "Twitter",
+          "active": true,
+          "category": "social"
+        },
+        {
+          "id": "social-5",
+          "name": "Join Sui community call",
+          "description": "Participate in the weekly Sui community call on Discord",
+          "points": 8,
+          "logo": "🎙️",
+          "protocol": "Discord",
+          "active": true,
+          "category": "social"
+        },
+        {
+          "id": "social-6",
+          "name": "Follow Sui builders",
+          "description": "Follow and engage with top Sui ecosystem builders on Twitter",
+          "points": 6,
+          "logo": "👥",
+          "protocol": "Twitter",
+          "active": false,
+          "category": "social"
+        }
+      ]
+    },
+    "irl": {
+      "name": "IRL",
+      "description": "Sui ecosystem real-world events and activities",
+      "tasks": [
+        {
+          "id": "irl-1",
+          "name": "Submit to Sui Hackathon",
+          "description": "Register for the upcoming Sui hackathon and submit an innovative Move project",
+          "points": 25,
+          "logo": "💻",
+          "protocol": "Hackathon",
+          "active": true,
+          "category": "irl"
+        },
+        {
+          "id": "irl-2",
+          "name": "Attend Sui meetup",
+          "description": "Join the local Sui community meetup in your city",
+          "points": 10,
+          "logo": "🤝",
+          "protocol": "Meetup",
+          "active": true,
+          "category": "irl"
+        },
+        {
+          "id": "irl-3",
+          "name": "Present at Sui conference",
+          "description": "Give a presentation about your Sui dApp experience at a blockchain conference",
+          "points": 30,
+          "logo": "🎤",
+          "protocol": "Conference",
+          "active": true,
+          "category": "irl"
+        },
+        {
+          "id": "irl-4",
+          "name": "Move workshop participation",
+          "description": "Attend a hands-on workshop about Move programming language on Sui",
+          "points": 18,
+          "logo": "🛠️",
+          "protocol": "Workshop",
+          "active": true,
+          "category": "irl"
+        },
+        {
+          "id": "irl-5",
+          "name": "Sui networking event",
+          "description": "Attend a Sui ecosystem networking event and connect with builders",
+          "points": 12,
+          "logo": "🌐",
+          "protocol": "Networking",
+          "active": true,
+          "category": "irl"
+        },
+        {
+          "id": "irl-6",
+          "name": "Sui validator meetup",
+          "description": "Attend a validator meetup to learn about Sui network operations",
+          "points": 15,
+          "logo": "⚡",
+          "protocol": "Validator",
+          "active": false,
+          "category": "irl"
+        }
+      ]
+    }
+  }
+}

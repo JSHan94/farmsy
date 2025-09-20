@@ -7,7 +7,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "./ui/sidebar"
-import { Home, CheckSquare, Settings, BarChart3 } from "lucide-react"
+import { Home, Compass, Settings, BarChart3 } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 import styles from './AppSidebar.module.css'
 
@@ -18,9 +18,9 @@ const menuItems = [
     url: "/",
   },
   {
-    title: "Tasks",
-    icon: CheckSquare,
-    url: "/tasks",
+    title: "Explore",
+    icon: Compass,
+    url: "/explore",
   },
   {
     title: "Analytics",
@@ -38,24 +38,39 @@ export function AppSidebar() {
   const location = useLocation()
 
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className={styles.sidebar}>
+      <SidebarContent className={styles.sidebarContent}>
+        {/* TossInvest-style Header */}
         <div className={styles.sidebarHeader}>
-          <h2>TaskTracker</h2>
+          <div className={styles.brandContainer}>
+            <div className={styles.brandIcon}>
+              <Compass className="h-6 w-6 text-white" />
+            </div>
+            <h2 className={styles.brandTitle}>Farmsy</h2>
+          </div>
         </div>
-        <SidebarGroup>
+
+        <SidebarGroup className={styles.menuGroup}>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={location.pathname === item.url}>
-                    <Link to={item.url} className={styles.menuLink}>
-                      <item.icon className={styles.menuIcon} />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+            <SidebarMenu className={styles.menu}>
+              {menuItems.map((item) => {
+                const isActive = location.pathname === item.url
+                return (
+                  <SidebarMenuItem key={item.title} className={styles.menuItem}>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        to={item.url}
+                        className={`${styles.menuLink} ${isActive ? styles.menuLinkActive : ''}`}
+                      >
+                        <div className={`${styles.menuIconWrapper} ${isActive ? styles.menuIconWrapperActive : ''}`}>
+                          <item.icon className={styles.menuIcon} />
+                        </div>
+                        <span className={styles.menuText}>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

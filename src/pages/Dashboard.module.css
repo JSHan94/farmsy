@@ -1,0 +1,377 @@
+/* Dashboard Page Styles */
+.container {
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.header {
+  background: white;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerContent {
+  max-width: 7xl;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.headerText h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-foreground);
+  margin-bottom: 0.5rem;
+}
+
+.headerText p {
+  color: var(--color-muted-foreground);
+  font-size: 1.125rem;
+}
+
+.mainContent {
+  max-width: 7xl;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.tabsContainer {
+  width: 100%;
+}
+
+.tabsNav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .tabsNav {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.tabsList {
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .tabsList {
+    justify-content: flex-start;
+  }
+}
+
+.tabsListInner {
+  background: var(--color-muted);
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.tabTrigger {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  height: 2.5rem;
+  box-sizing: border-box;
+}
+
+.tabTrigger[data-state="active"] {
+  background: white;
+  color: var(--color-foreground);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tabIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.filterSection {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-muted);
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  height: 3.5rem;
+  box-sizing: border-box;
+}
+
+.filterLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-muted-foreground);
+}
+
+.filterSelect {
+  width: 12rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  background: white;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.filterOption {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.filterColorSwatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid;
+}
+
+.tabContent {
+  margin-top: 0;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.contentWrapper {
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.contentTransitioning {
+  pointer-events: none;
+}
+
+.viewContent {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.fadeOut {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+}
+
+.fadeIn {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: slideInContent 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.contentWrapper:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Tab transition animations */
+@keyframes slideInContent {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  60% {
+    opacity: 0.8;
+    transform: translateY(-2px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Content loading animation */
+.contentLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: white;
+  border-radius: 1rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.loadingSpinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid var(--color-muted);
+  border-top: 2px solid var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tab trigger animations */
+.tabTrigger {
+  position: relative;
+  overflow: hidden;
+}
+
+.tabTrigger::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.tabTrigger:hover::before {
+  left: 100%;
+}
+
+.tabTrigger[data-state="active"] {
+  animation: tabActivate 0.3s ease-out;
+}
+
+@keyframes tabActivate {
+  0% {
+    transform: scale(0.95);
+    background-color: var(--color-muted);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+    background-color: white;
+  }
+}
+
+/* Smooth transitions for different view types */
+.boardView {
+  animation: slideInFromLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.calendarView {
+  animation: slideInFromRight 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Tab trigger enhanced animations */
+.tabTrigger {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(0);
+}
+
+.tabTrigger:hover {
+  transform: translateY(-1px);
+}
+
+.tabTrigger[data-state="active"] {
+  transform: translateY(0);
+  animation: tabActivate 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tabActivate {
+  0% {
+    transform: scale(0.98);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Filter section animation */
+.filterSection {
+  transition: all 0.3s ease;
+}
+
+.filterSection:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive animations */
+@media (prefers-reduced-motion: reduce) {
+  .tabContent,
+  .contentWrapper,
+  .tabTrigger,
+  .boardView,
+  .calendarView,
+  .filterSection,
+  .viewContent,
+  .fadeIn,
+  .fadeOut {
+    animation: none !important;
+    transition: opacity 0.1s ease !important;
+    transform: none !important;
+  }
+
+  .loadingSpinner {
+    animation: none;
+  }
+}
+
+/* Performance optimizations */
+.contentWrapper,
+.viewContent,
+.tabTrigger {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smoother transitions on high-refresh displays */
+@media (min-resolution: 120dpi) {
+  .viewContent {
+    transition-duration: 0.25s;
+  }
+
+  .boardView,
+  .calendarView {
+    animation-duration: 0.4s;
+  }
+}

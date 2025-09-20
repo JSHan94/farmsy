@@ -1,0 +1,475 @@
+/* Explore Task Card Styles */
+.taskCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 1rem;
+}
+
+.taskCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.2);
+}
+
+.taskCardInactive {
+  opacity: 0.6;
+  background: rgba(249, 250, 251, 0.8);
+}
+
+.taskCardInactive:hover {
+  transform: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Left Section: Task Info */
+.taskInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.logoSection {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.logo {
+  width: 4rem;
+  height: 4rem;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.statusIndicator {
+  position: absolute;
+  top: -0.25rem;
+  right: -0.25rem;
+  background: white;
+  border-radius: 50%;
+  padding: 0.125rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statusIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.statusActive {
+  color: rgb(34, 197, 94);
+  fill: rgb(34, 197, 94);
+}
+
+.statusInactive {
+  color: rgb(156, 163, 175);
+  fill: none;
+}
+
+.taskDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.taskHeader {
+  margin-bottom: 0.5rem;
+}
+
+.taskName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin: 0 0 0.25rem 0;
+  line-height: 1.4;
+}
+
+.taskMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.protocol {
+  font-weight: 500;
+  color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+}
+
+.separator {
+  color: var(--color-muted-foreground);
+}
+
+.category {
+  color: var(--color-muted-foreground);
+  text-transform: capitalize;
+}
+
+.taskDescription {
+  color: var(--color-muted-foreground);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Right Section: Actions */
+.taskActions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-shrink: 0;
+}
+
+.pointsSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pointsBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+}
+
+.pointsIcon {
+  width: 1rem;
+  height: 1rem;
+  color: #d97706;
+  fill: #d97706;
+}
+
+.pointsValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  background: var(--color-primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.addButton:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.addButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+.addButtonAdded {
+  background: white;
+  color: rgb(34, 197, 94);
+  border: 1px solid rgb(34, 197, 94);
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.1);
+}
+
+.addButtonAdded:hover:not(:disabled) {
+  background: rgb(240, 253, 244);
+  transform: none;
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+}
+
+.buttonIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .taskCard {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .taskInfo {
+    gap: 1rem;
+  }
+
+  .logo {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+  }
+
+  .taskMeta {
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .protocol {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.8125rem;
+  }
+
+  .taskDescription {
+    -webkit-line-clamp: 3; /* Allow more lines on mobile */
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+  }
+
+  .taskActions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .pointsBadge {
+    padding: 0.5rem 0.625rem;
+    gap: 0.25rem;
+  }
+
+  .pointsValue {
+    font-size: 0.8125rem;
+  }
+
+  .addButton {
+    flex: 1;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    max-width: 200px; /* Prevent button from being too wide */
+  }
+}
+
+@media (max-width: 640px) {
+  .taskCard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .taskInfo {
+    gap: 0.875rem;
+  }
+
+  .taskDetails {
+    min-width: 0; /* Ensure proper text wrapping */
+  }
+
+  .taskName {
+    font-size: 1rem;
+    line-height: 1.3;
+    word-break: break-word; /* Handle long task names */
+  }
+
+  .taskMeta {
+    gap: 0.25rem;
+  }
+
+  .separator {
+    display: none; /* Hide separator on small screens for cleaner look */
+  }
+
+  .category {
+    font-size: 0.75rem;
+  }
+
+  .taskDescription {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    margin-top: 0.375rem;
+  }
+
+  .taskActions {
+    gap: 0.875rem;
+  }
+
+  .pointsBadge {
+    padding: 0.375rem 0.5rem;
+  }
+
+  .pointsIcon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .pointsValue {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .taskCard {
+    padding: 0.875rem;
+    gap: 0.875rem;
+  }
+
+  .taskInfo {
+    gap: 0.75rem;
+  }
+
+  .logo {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.25rem;
+    border-radius: 0.75rem;
+  }
+
+  .statusIndicator {
+    top: -0.125rem;
+    right: -0.125rem;
+  }
+
+  .statusIcon {
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  .taskName {
+    font-size: 0.9375rem;
+    margin-bottom: 0.125rem;
+  }
+
+  .taskMeta {
+    margin-bottom: 0.25rem;
+  }
+
+  .protocol {
+    padding: 0.0625rem 0.375rem;
+    font-size: 0.75rem;
+    border-radius: 0.25rem;
+  }
+
+  .category {
+    font-size: 0.6875rem;
+  }
+
+  .taskDescription {
+    font-size: 0.75rem;
+    line-height: 1.3;
+    -webkit-line-clamp: 2; /* Limit to 2 lines on very small screens */
+  }
+
+  .taskActions {
+    flex-direction: column-reverse; /* Put button on top, points below */
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .pointsSection {
+    align-self: center;
+  }
+
+  .pointsBadge {
+    padding: 0.25rem 0.5rem;
+    gap: 0.125rem;
+  }
+
+  .pointsIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .pointsValue {
+    font-size: 0.6875rem;
+    font-weight: 500;
+  }
+
+  .addButton {
+    padding: 0.75rem;
+    font-size: 0.8125rem;
+    max-width: none; /* Allow full width on very small screens */
+    border-radius: 0.625rem;
+  }
+
+  .buttonIcon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+}
+
+/* Extra small screens (iPhone SE, etc.) */
+@media (max-width: 375px) {
+  .taskCard {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .taskInfo {
+    gap: 0.625rem;
+  }
+
+  .logo {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.125rem;
+  }
+
+  .taskName {
+    font-size: 0.875rem;
+  }
+
+  .protocol {
+    font-size: 0.6875rem;
+  }
+
+  .taskDescription {
+    font-size: 0.6875rem;
+  }
+
+  .addButton {
+    padding: 0.625rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Animation for adding to backlog */
+@keyframes addSuccess {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.addButtonAdded {
+  animation: addSuccess 0.3s ease-out;
+}

@@ -36,6 +36,7 @@ const playWaterDropSound = () => {
 interface TaskCardProps {
   task: Task & { color: string }
   onEdit?: (task: Task) => void
+  showDescription?: boolean
 }
 
 const getProtocolClass = (protocol: string) => {
@@ -53,7 +54,7 @@ const getProtocolClass = (protocol: string) => {
   return classMap[protocol] || styles.colorGray
 }
 
-export function TaskCard({ task, onEdit }: TaskCardProps) {
+export function TaskCard({ task, onEdit, showDescription = true }: TaskCardProps) {
   const [isCompleted, setIsCompleted] = useState(task.status === 'done')
   const [previousStatus, setPreviousStatus] = useState(task.status)
 
@@ -118,9 +119,9 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
   const formatDate = (dateString?: string) => {
     if (!dateString) return null
     const date = new Date(dateString)
-    return date.toLocaleDateString('ko-KR', { 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
     })
   }
 
@@ -150,39 +151,37 @@ export function TaskCard({ task, onEdit }: TaskCardProps) {
             </div>
             <h4 className={styles.taskTitle}>{task.title}</h4>
           </div>
-          <button
-            onClick={handleLinkClick}
-            className={styles.linkButton}
-          >
-            <ExternalLink className={styles.linkIcon} />
-          </button>
         </div>
 
-        {/* Task content */}
-        <div className={styles.taskContent}>
-          {task.description && (
-            <p className={styles.taskDescription}>{task.description}</p>
+        {/* Date range footer with Go button */}
+        <div className={styles.cardFooter}>
+          {(task.startDate || task.endDate) && (
+            <div className={styles.dateRange}>
+              {task.startDate && (
+                <span className={styles.startDate}>
+                  {formatDate(task.startDate)}
+                </span>
+              )}
+              {task.startDate && task.endDate && (
+                <span className={styles.dateSeparator}>→</span>
+              )}
+              {task.endDate && (
+                <span className={styles.endDate}>
+                  {formatDate(task.endDate)}
+                </span>
+              )}
+            </div>
+          )}
+
+          {task.externalLink && (
+            <button
+              onClick={handleLinkClick}
+              className={styles.goButton}
+            >
+              Go
+            </button>
           )}
         </div>
-
-        {/* Date range footer */}
-        {(task.startDate || task.endDate) && (
-          <div className={styles.dateRange}>
-            {task.startDate && (
-              <span className={styles.startDate}>
-                {formatDate(task.startDate)}
-              </span>
-            )}
-            {task.startDate && task.endDate && (
-              <span className={styles.dateSeparator}>→</span>
-            )}
-            {task.endDate && (
-              <span className={styles.endDate}>
-                {formatDate(task.endDate)}
-              </span>
-            )}
-          </div>
-        )}
       </div>
     </div>
   )

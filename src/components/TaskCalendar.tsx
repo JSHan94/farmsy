@@ -1,9 +1,12 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog'
+import { Badge } from './ui/badge'
+import { ExternalLink } from 'lucide-react'
 import { Task } from '../types/blockchain'
 import styles from './TaskCalendar.module.css'
 
@@ -15,6 +18,8 @@ interface TaskCalendarProps {
 
 export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarProps) {
   const calendarRef = useRef<FullCalendar>(null)
+  const [selectedTask, setSelectedTask] = useState<(Task & { color: string }) | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   // Convert tasks to calendar events
   const calendarEvents = tasks.map(task => ({
@@ -35,6 +40,11 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
 
   const handleEventClick = (clickInfo: any) => {
     const task = clickInfo.event.extendedProps.task
+    const taskWithColor = tasks.find(t => t.id === task.id)
+    if (taskWithColor) {
+      setSelectedTask(taskWithColor)
+      setIsDialogOpen(true)
+    }
     if (onTaskClick && task) {
       onTaskClick(task)
     }
@@ -47,18 +57,16 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
   }
 
   const renderEventContent = (eventInfo: any) => {
-    const { difficulty, protocol, status, xpReward } = eventInfo.event.extendedProps
+    const { protocol, xpReward } = eventInfo.event.extendedProps
 
     return (
       <div className={styles.eventContent}>
-        <div className={styles.eventTitle}>{eventInfo.event.title}</div>
+        <div className={styles.eventTitle}>
+          {eventInfo.event.title}
+        </div>
         <div className={styles.eventMeta}>
           <span className={styles.eventProtocol}>{protocol}</span>
-          <span className={styles.eventDifficulty}>{difficulty}</span>
           <span className={styles.eventXP}>+{xpReward} XP</span>
-        </div>
-        <div className={`${styles.eventStatus} ${styles[`status${status.charAt(0).toUpperCase() + status.slice(1)}`]}`}>
-          {status}
         </div>
       </div>
     )
@@ -76,16 +84,17 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  const handleExternalLink = (link: string) => {
+    window.open(link, '_blank')
+  }
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false)
+    setSelectedTask(null)
+  }
+
   return (
     <Card className={styles.calendarCard}>
-      <CardHeader>
-        <CardTitle className={styles.calendarTitle}>
-          Task Calendar
-          <span className={styles.taskCount}>
-            {tasks.length} tasks
-          </span>
-        </CardTitle>
-      </CardHeader>
       <CardContent className={styles.calendarContent}>
         <FullCalendar
           ref={calendarRef}
@@ -94,7 +103,7 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
           headerToolbar={{
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: ''
           }}
           events={calendarEvents}
           eventClick={handleEventClick}
@@ -139,6 +148,83 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
           }}
         />
       </CardContent>
+
+      {/* Task Detail Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={handleCloseDialog}>
+        <DialogContent className={styles.taskDialog}>
+          <DialogHeader>
+            <DialogTitle className={styles.dialogTitle}>
+              Task Details
+            </DialogTitle>
+          </DialogHeader>
+
+          {selectedTask && (
+            <div className={styles.taskDetails}>
+              {/* Task Header */}
+              <div className={styles.taskHeader}>
+                <div className={styles.taskTitleSection}>
+                  <h3 className={styles.taskTitle}>{selectedTask.title}</h3>
+                  <Badge
+                    variant="secondary"
+                    className={styles.statusBadge}
+                    style={{ backgroundColor: selectedTask.color }}
+                  >
+                    {selectedTask.status}
+                  </Badge>
+                </div>
+
+                {selectedTask.externalLink && (
+                  <button
+                    onClick={() => handleExternalLink(selectedTask.externalLink!)}
+                    className={styles.goButton}
+                  >
+                    <ExternalLink size={16} />
+                    Go
+                  </button>
+                )}
+              </div>
+
+              {/* Task Description */}
+              {selectedTask.description && (
+                <div className={styles.taskDescription}>
+                  <h4>Description</h4>
+                  <p>{selectedTask.description}</p>
+                </div>
+              )}
+
+              {/* Task Metadata */}
+              <div className={styles.taskMetadata}>
+                <div className={styles.metadataGrid}>
+                  <div className={styles.metadataItem}>
+                    <span className={styles.metadataLabel}>Protocol</span>
+                    <span className={styles.metadataValue}>{selectedTask.protocol}</span>
+                  </div>
+                  <div className={styles.metadataItem}>
+                    <span className={styles.metadataLabel}>Category</span>
+                    <span className={styles.metadataValue}>{selectedTask.category}</span>
+                  </div>
+                  <div className={styles.metadataItem}>
+                    <span className={styles.metadataLabel}>Difficulty</span>
+                    <span className={styles.metadataValue}>{selectedTask.difficulty}</span>
+                  </div>
+                  <div className={styles.metadataItem}>
+                    <span className={styles.metadataLabel}>XP Reward</span>
+                    <span className={styles.metadataValue}>+{selectedTask.xpReward} XP</span>
+                  </div>
+                  {selectedTask.dueDate && (
+                    <div className={styles.metadataItem}>
+                      <span className={styles.metadataLabel}>Due Date</span>
+                      <span className={styles.metadataValue}>
+                        {new Date(selectedTask.dueDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </Card>
   )
 }

@@ -4,7 +4,7 @@ import { AppSidebar } from "./components/AppSidebar"
 import { WalletConnect } from "./components/WalletConnect"
 import { XPProgressBar, useXPSystem } from "./components/XPProgressBar"
 import { Dashboard } from "./pages/Dashboard"
-import { Tasks } from "./pages/Tasks"
+import { Explore } from "./pages/Explore"
 import { Analytics } from "./pages/Analytics"
 import { Settings } from "./pages/Settings"
 import styles from './App.module.css'
@@ -35,7 +35,7 @@ export default function App() {
           <main className={styles.mainContent}>
             <Routes>
               <Route path="/" element={<Dashboard />} />
-              <Route path="/tasks" element={<Tasks />} />
+              <Route path="/explore" element={<Explore />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
