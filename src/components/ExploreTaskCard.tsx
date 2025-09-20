@@ -6,7 +6,7 @@ interface ExploreTask {
   id: string
   name: string
   description: string
-  points: number
+  droplets: number
   logo: string
   protocol: string
   active: boolean
@@ -55,7 +55,7 @@ export function ExploreTaskCard({ task, onAddToBacklog, isAdded = false }: Explo
         <div className={styles.pointsSection}>
           <div className={styles.pointsBadge}>
             <Star className={styles.pointsIcon} />
-            <span className={styles.pointsValue}>{task.points} pts</span>
+            <span className={styles.pointsValue}>{task.droplets} droplets</span>
           </div>
         </div>
 

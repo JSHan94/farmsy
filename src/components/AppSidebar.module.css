@@ -15,7 +15,7 @@
 .sidebarHeader {
   padding: 2rem 1.5rem 1.5rem 1.5rem;
   border-bottom: 1px solid var(--color-border);
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
 }
 
 .brandContainer {
@@ -102,7 +102,7 @@
 }
 
 .menuLinkActive {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white !important;
   box-shadow: 0 2px 8px rgba(0, 102, 255, 0.25);
   transform: translateX(4px);
@@ -163,7 +163,7 @@
 
 /* Hover effects */
 .menuLink:hover .menuIconWrapper {
-  background-color: var(--color-primary);
+  background-color: #3b82f6;
   transform: scale(1.05);
 }
 

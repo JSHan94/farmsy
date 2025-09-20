@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom"
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/AppSidebar"
 import { WalletConnect } from "./components/WalletConnect"
-import { XPProgressBar, useXPSystem } from "./components/XPProgressBar"
+import { DropletsDisplay, useXPSystem } from "./components/XPProgressBar"
 import { Dashboard } from "./pages/Dashboard"
 import { Explore } from "./pages/Explore"
 import { Analytics } from "./pages/Analytics"
@@ -22,8 +22,8 @@ export default function App() {
             <div className={styles.headerContent}>
               <SidebarTrigger />
               <div className={styles.headerRight}>
-                <XPProgressBar
-                  currentXP={currentXP}
+                <DropletsDisplay
+                  currentDroplets={currentXP}
                   currentLevel={currentLevel}
                 />
                 <WalletConnect />

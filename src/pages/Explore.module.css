@@ -123,7 +123,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -169,7 +169,7 @@
 }
 
 .tabTrigger[data-state="active"] {
-  background: var(--color-primary);
+  background: #3b82f6;
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
@@ -216,7 +216,7 @@
 .resultCount {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--color-primary);
+  color: #3b82f6;
   background: rgba(59, 130, 246, 0.1);
   padding: 0.375rem 0.75rem;
   border-radius: 0.5rem;

@@ -10,8 +10,8 @@
 }
 
 .addButton:hover {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
+  border-color: #3b82f6;
+  background: #3b82f6;
   color: white;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 102, 255, 0.15);
@@ -166,7 +166,7 @@
 }
 
 .taskTemplateCard:hover {
-  border-color: var(--color-primary);
+  border-color: #3b82f6;
   transform: translateY(-4px);
   box-shadow: 0 8px 32px rgba(0, 102, 255, 0.15);
 }
@@ -204,7 +204,7 @@
   height: 16px;
   opacity: 0.7;
   flex-shrink: 0;
-  color: var(--color-primary);
+  color: #3b82f6;
 }
 
 .taskTemplateBadges {

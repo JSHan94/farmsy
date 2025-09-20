@@ -157,7 +157,7 @@
 }
 
 .tabTrigger[data-state="active"] {
-  background: var(--color-primary);
+  background: #3b82f6;
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
 }
@@ -234,7 +234,7 @@
 .metricIcon {
   width: 1.5rem;
   height: 1.5rem;
-  color: var(--color-primary);
+  color: #3b82f6;
 }
 
 .trendIcon {
@@ -321,7 +321,7 @@
 
 .sectionIconWrapper {
   padding: 0.5rem;
-  background: var(--color-primary);
+  background: #3b82f6;
   border-radius: 0.5rem;
 }
 
@@ -468,7 +468,7 @@
   gap: 0.25rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: #3b82f6;
 }
 
 .completionXpIcon {
@@ -637,7 +637,7 @@
 .levelNumber {
   font-size: 3rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: #3b82f6;
   line-height: 1;
 }
 
@@ -675,7 +675,7 @@
 
 .progressFill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary), #8b5cf6);
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   border-radius: 0.5rem;
   transition: width 0.3s ease;
 }
@@ -1056,7 +1056,7 @@
 
 .historyIconWrapper {
   padding: 0.5rem;
-  background: var(--color-primary);
+  background: #3b82f6;
   border-radius: 0.5rem;
 }
 
@@ -1117,7 +1117,7 @@
 .categoryIcon {
   width: 1rem;
   height: 1rem;
-  color: var(--color-primary);
+  color: #3b82f6;
 }
 
 .categoryInfo {
@@ -1150,7 +1150,7 @@
   gap: 0.25rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-primary);
+  color: #3b82f6;
 }
 
 .categoryXpIcon {
@@ -1168,7 +1168,7 @@
 
 .categoryProgressBar {
   height: 100%;
-  background: var(--color-primary);
+  background: #3b82f6;
   border-radius: 0.25rem;
   transition: width 0.3s ease;
 }
@@ -1397,7 +1397,7 @@
 
 .analyticsIconWrapper {
   padding: 0.5rem;
-  background: var(--color-primary);
+  background: #3b82f6;
   border-radius: 0.5rem;
 }
 

@@ -105,7 +105,7 @@
 }
 
 .cardIconPrimary {
-  background: var(--color-primary);
+  background: #3b82f6;
 }
 
 .cardIconPrimary svg {
@@ -167,12 +167,12 @@
 
 .inputField:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .primaryButton {
-  background: var(--color-primary);
+  background: #3b82f6;
   color: white;
   padding: 0.875rem 1.5rem;
   border-radius: 0.75rem;
@@ -274,7 +274,7 @@
   padding: 0.75rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 500;
-  background: var(--color-primary);
+  background: #3b82f6;
   color: white;
   border: none;
   cursor: pointer;
@@ -344,7 +344,7 @@
 
 .walletInput:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -355,7 +355,7 @@
   padding: 0.875rem 1.25rem;
   border-radius: 0.75rem;
   font-weight: 500;
-  background: var(--color-primary);
+  background: #3b82f6;
   color: white;
   border: none;
   cursor: pointer;

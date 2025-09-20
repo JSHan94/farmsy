@@ -33,7 +33,7 @@ Farmsy is a gamified, multi-blockchain task management application built with Re
 
 Users can manage and track tasks through a Task Tracker system that supports multiple blockchain ecosystems, with initial focus on Sui dApps.
 
-Completing tracked tasks rewards users with XP points (varies by difficulty: easy=20, medium=35, hard=50), allowing them to level up and progress over time.
+Completing tracked tasks rewards users with XP droplets (varies by difficulty: easy=20, medium=35, hard=50), allowing them to level up and progress over time.
 
 The application is designed with extensible architecture to easily add new blockchains and protocols.
 

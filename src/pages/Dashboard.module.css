@@ -244,7 +244,7 @@
   width: 2rem;
   height: 2rem;
   border: 2px solid var(--color-muted);
-  border-top: 2px solid var(--color-primary);
+  border-top: 2px solid #3b82f6;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

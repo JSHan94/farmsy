@@ -91,24 +91,6 @@ export function Analytics() {
     <div className={styles.container}>
       {/* Main Content */}
       <div className={styles.mainContent}>
-        {/* Time Range Filter */}
-        <div className={styles.controlsSection}>
-          <div className={styles.filterContainer}>
-            <span className={styles.filterLabel}>Time Range:</span>
-            <Select value={timeRange} onValueChange={setTimeRange}>
-              <SelectTrigger className={styles.filterSelect}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="7d">Last 7 days</SelectItem>
-                <SelectItem value="30d">Last 30 days</SelectItem>
-                <SelectItem value="90d">Last 90 days</SelectItem>
-                <SelectItem value="all">All time</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
         {/* Analytics Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className={styles.tabsContainer}>
           <TabsList className={styles.tabsList}>

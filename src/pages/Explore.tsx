@@ -111,9 +111,9 @@ export function Explore() {
       description: exploreTask.description,
       protocol: exploreTask.protocol as any, // Type assertion for now
       category: exploreTask.category,
-      difficulty: exploreTask.points <= 5 ? 'easy' as const :
-                  exploreTask.points <= 15 ? 'medium' as const : 'hard' as const,
-      xpReward: exploreTask.points,
+      difficulty: exploreTask.droplets <= 5 ? 'easy' as const :
+                  exploreTask.droplets <= 15 ? 'medium' as const : 'hard' as const,
+      xpReward: exploreTask.droplets,
       startDate: new Date().toISOString().split('T')[0],
       endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
       blockchain: 'sui' as const,
