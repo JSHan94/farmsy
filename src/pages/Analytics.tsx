@@ -1,11 +1,12 @@
 import { useState, useMemo } from "react"
-import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, Zap, Shield, Coins, Heart, Users2 } from "lucide-react"
+import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, Zap, Shield, Coins, Heart, Users2, Camera } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { useTaskManager } from "../hooks/useTaskManager"
 import { useXPSystem } from "../components/XPProgressBar"
 import { getAllProtocols } from "../utils/blockchain"
+import { CharacterImageModal } from "../components/CharacterImageModal"
 import styles from './Analytics.module.css'
 
 const protocolConfig = getAllProtocols()
@@ -15,6 +16,8 @@ export function Analytics() {
   const { currentXP, currentLevel, xpForNextLevel } = useXPSystem(150, 2)
   const [timeRange, setTimeRange] = useState('7d')
   const [activeTab, setActiveTab] = useState('overview')
+  const [characterImage, setCharacterImage] = useState('/cat1.png')
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
   const stats = getTaskStatistics()
 
@@ -85,6 +88,10 @@ export function Analytics() {
 
   const handleTabChange = (newTab: string) => {
     setActiveTab(newTab)
+  }
+
+  const handleImageSelect = (imagePath: string) => {
+    setCharacterImage(imagePath)
   }
 
   return (
@@ -184,16 +191,19 @@ export function Analytics() {
                   </CardHeader>
                   <CardContent className={styles.characterContent}>
                     <div className={styles.characterImage}>
-                      {/* Placeholder image - user will replace with custom slime */}
-                      <div className={styles.slimePlaceholder}>
-                        <div className={styles.slimeBody}>
-                          <div className={styles.slimeEyes}>
-                            <div className={styles.slimeEye}></div>
-                            <div className={styles.slimeEye}></div>
-                          </div>
-                          <div className={styles.slimeMouth}></div>
-                        </div>
-                        <div className={styles.slimeShine}></div>
+                      <div className={styles.characterImageWrapper}>
+                        <img
+                          src={characterImage}
+                          alt="Character"
+                          className={styles.characterImg}
+                        />
+                        <button
+                          onClick={() => setIsImageModalOpen(true)}
+                          className={styles.editImageButton}
+                          aria-label="Change character image"
+                        >
+                          <Camera className={styles.editIcon} />
+                        </button>
                       </div>
                       <div className={styles.levelBadgeContainer}>
                         <div className={styles.levelBadgeOverlay}>Lv. {currentLevel}</div>
@@ -487,6 +497,14 @@ export function Analytics() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Character Image Selection Modal */}
+      <CharacterImageModal
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
+        onImageSelect={handleImageSelect}
+        currentImage={characterImage}
+      />
     </div>
   )
 }
