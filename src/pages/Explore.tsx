@@ -128,21 +128,6 @@ export function Explore() {
     <div className={styles.container}>
       {/* Main Content */}
       <div className={styles.mainContent}>
-        {/* Search and Filters */}
-        <div className={styles.controlsSection}>
-          <div className={styles.searchContainer}>
-            <div className={styles.searchInputWrapper}>
-              <Search className={styles.searchIcon} />
-              <Input
-                placeholder="Search tasks, protocols, or descriptions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-            </div>
-          </div>
-        </div>
-
         {/* Category Tabs */}
         <Tabs value={selectedCategory} onValueChange={(value) => setSelectedCategory(value as CategoryType)} className={styles.categoryTabs}>
           <TabsList className={styles.tabsList}>
@@ -161,14 +146,6 @@ export function Explore() {
               )
             })}
           </TabsList>
-
-          {/* Category Description */}
-          <div className={styles.categoryDescription}>
-            <p>{categories.find(c => c.id === selectedCategory)?.description}</p>
-            <span className={styles.resultCount}>
-              {filteredTasks.length} task{filteredTasks.length !== 1 ? 's' : ''} found
-            </span>
-          </div>
 
           {/* Task Lists */}
           {categories.map((category) => (

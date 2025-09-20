@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Calendar, Grid } from "lucide-react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { TaskBoard } from "../components/TaskBoard"
 import { TaskCalendar } from "../components/TaskCalendar"
