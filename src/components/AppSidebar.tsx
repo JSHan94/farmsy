@@ -7,8 +7,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "./ui/sidebar"
-import { Home, Compass, Settings, BarChart3 } from "lucide-react"
+import { Home, Compass, Settings, BarChart3, ArrowRightLeft } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
+import { WormholeBridge } from "./WormholeBridge"
 import styles from './AppSidebar.module.css'
 
 const menuItems = [
@@ -74,6 +75,11 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Bridge Section */}
+        <div className={styles.bridgeSection}>
+          <WormholeBridge />
+        </div>
       </SidebarContent>
     </Sidebar>
   )

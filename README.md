@@ -1,69 +1,32 @@
-# React + TypeScript + Vite
+## Problem
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+New users are often lost when joining a new chain, unsure of what to do first.
 
-Currently, two official plugins are available:
+Builders struggle to attract and retain genuine, loyal users instead of short-term participants.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Solution
 
-## Expanding the ESLint configuration
+We provide a structured way to guide users and empower builders:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+For users: Clear visibility into available tasks, making onboarding simple and engaging.
+For builders: Tools to cultivate loyalty and measure real engagement, leading to organic ecosystem growth.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Key features include:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+Archiving and categorizing available tasks across the Sui ecosystem.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+On-chain and social activity analysis combined with a points program to measure engagement.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+AI-powered activity insights:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Users can easily track their contributions within the ecosystem.
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Builders gain meaningful metrics to distinguish real participants from short-term “farmers.”
+
+## Impact
+
+For users: A more guided and rewarding onboarding experience.
+
+For builders: A reliable way to foster community, retain genuine users, and drive sustainable ecosystem growth.
+
+For the ecosystem: Stronger network effects through transparent engagement measurement and AI-driven insights.

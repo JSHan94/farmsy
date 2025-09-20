@@ -207,3 +207,10 @@
     gap: 0.875rem;
   }
 }
+
+/* Bridge Section */
+.bridgeSection {
+  padding: 1rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: auto;
+}
