@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Wallet, Plus, X, Twitter, MessageCircle, Send, ExternalLink, Copy, Check } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import { Button } from "../components/ui/button"
+import { Button } from "../components/Button"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { Separator } from "../components/ui/separator"

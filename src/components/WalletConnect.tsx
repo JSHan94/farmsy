@@ -1,5 +1,5 @@
 import { ConnectButton, useCurrentAccount } from '@mysten/dapp-kit'
-import { Button } from "./ui/button"
+import { Button } from "./Button"
 import { Wallet } from "lucide-react"
 import styles from './WalletConnect.module.css'
 

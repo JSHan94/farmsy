@@ -70,6 +70,7 @@ The application is designed with extensible architecture to easily add new block
 ### Styling System
 
 - **CSS Modules** - Component-specific styles (`.module.css` files)
+- **CSS Module Requirement** - ALL CSS files MUST be module.css files co-located with their corresponding TSX components
 - **Global Styles** - `src/index.css` with Tailwind CSS integration
 - **Tailwind Classes** - Used extensively for utility-first styling
 - **Design System** - Consistent color scheme with task status colors (blue, green, yellow, purple, pink, gray)

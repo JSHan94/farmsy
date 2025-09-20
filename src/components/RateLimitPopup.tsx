@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AlertTriangle, X } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button } from "./Button"
 import styles from "./RateLimitPopup.module.css"
 
 interface RateLimitPopupProps {

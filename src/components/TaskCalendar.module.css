@@ -438,6 +438,7 @@
 
 .goButton:hover {
   background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+  color: white;
   box-shadow: 0 4px 8px rgba(0, 102, 255, 0.3);
   transform: translateY(-1px);
 }

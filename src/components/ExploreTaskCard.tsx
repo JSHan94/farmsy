@@ -1,5 +1,5 @@
 import { Plus, Star, CheckCircle, Circle } from "lucide-react"
-import { Button } from "./ui/button"
+import { Button } from "./Button"
 import styles from './ExploreTaskCard.module.css'
 
 interface ExploreTask {

@@ -2,6 +2,8 @@
 .container {
   min-height: 100vh;
   background: var(--color-background);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* Header Section - TossInvest style */
@@ -74,9 +76,11 @@
 
 /* Main Content */
 .mainContent {
-  max-width: 7xl;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 2rem 1.5rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Controls Section */
@@ -104,6 +108,7 @@
 
 .filterSelect {
   width: 12rem;
+  min-width: 150px;
   border: 1px solid var(--color-border);
   border-radius: 0.5rem;
   background: white;
@@ -155,6 +160,11 @@
   background: var(--color-primary);
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.tabTrigger[data-state="active"]:hover {
+  background: #2563eb;
+  color: white;
 }
 
 .tabIcon {
@@ -670,72 +680,107 @@
   transition: width 0.3s ease;
 }
 
-/* Responsive Design */
+/* Enhanced Mobile Responsiveness */
 @media (max-width: 1024px) {
+  .mainContent {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+
   .metricsGrid {
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
   }
 
   .sectionGrid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .protocolsGrid {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .topRowGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .filterContainer {
+    padding: 0.75rem;
+  }
+
+  .filterSelect {
+    width: 10rem;
+    min-width: 120px;
   }
 }
 
 @media (max-width: 768px) {
-  .headerContent {
-    padding: 1.5rem 1rem;
-  }
-
-  .headerInner {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.5rem;
-  }
-
-  .headerText {
-    text-align: center;
-  }
-
-  .headerText h1 {
-    font-size: 2rem;
-  }
-
-  .headerStats {
-    justify-content: center;
+  .container {
+    background: var(--color-background);
   }
 
   .mainContent {
-    padding: 1.5rem 1rem;
+    padding: 1rem 0.75rem;
+    max-width: 100%;
   }
 
-  .metricsGrid {
-    grid-template-columns: 1fr;
+  .controlsSection {
+    margin-bottom: 1.5rem;
+  }
+
+  .filterContainer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    text-align: center;
+  }
+
+  .filterLabel {
+    font-size: 0.8125rem;
+  }
+
+  .filterSelect {
+    width: 100%;
+    min-width: unset;
+    flex: 1;
   }
 
   .tabsList {
     flex-direction: column;
+    gap: 0.125rem;
+    padding: 0.375rem;
   }
 
   .tabTrigger {
-    justify-content: flex-start;
-  }
-
-  .filterContainer {
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    gap: 0.5rem;
     width: 100%;
-    justify-content: space-between;
   }
 
-  .filterSelect {
-    width: auto;
-    flex: 1;
+  .tabIcon {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .metricsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .topRowGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
   .protocolStats {
     grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .levelInfo {
@@ -747,31 +792,108 @@
   .xpInfo {
     align-items: center;
   }
+
+  .chartsWrapper {
+    gap: 1.5rem;
+  }
+
+  .pieSvg {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+@media (max-width: 640px) {
+  .mainContent {
+    padding: 1rem 0.5rem;
+  }
+
+  .controlsSection {
+    margin-bottom: 1rem;
+  }
+
+  .filterContainer {
+    padding: 0.625rem;
+    border-radius: 0.625rem;
+  }
+
+  .tabsList {
+    padding: 0.25rem;
+    border-radius: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .tabTrigger {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    border-radius: 0.625rem;
+  }
+
+  .tabIcon {
+    height: 0.875rem;
+    width: 0.875rem;
+  }
+
+  .metricContent {
+    padding: 1.25rem;
+  }
+
+  .categoryGrid {
+    gap: 0.75rem;
+  }
+
+  .categoryItem {
+    padding: 0.875rem;
+  }
+
+  .pieSvg {
+    width: 160px;
+    height: 160px;
+  }
 }
 
 @media (max-width: 480px) {
-  .headerContent {
-    padding: 1rem;
-  }
-
-  .headerText h1 {
-    font-size: 1.75rem;
-  }
-
   .mainContent {
-    padding: 1rem;
+    padding: 0.875rem 0.375rem;
   }
 
-  .statItem {
-    padding: 0.875rem 1rem;
+  .filterContainer {
+    padding: 0.5rem;
+    gap: 0.375rem;
   }
 
-  .statValue {
-    font-size: 1.25rem;
+  .filterLabel {
+    font-size: 0.75rem;
+  }
+
+  .filterSelect {
+    height: 2.25rem;
+    font-size: 0.875rem;
+  }
+
+  .tabsList {
+    margin-bottom: 0.875rem;
+    padding: 0.1875rem;
+  }
+
+  .tabTrigger {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    gap: 0.375rem;
+    border-radius: 0.5rem;
+  }
+
+  .tabIcon {
+    height: 0.75rem;
+    width: 0.75rem;
   }
 
   .metricContent {
     padding: 1rem;
+  }
+
+  .metricValue {
+    font-size: 1.5rem;
   }
 
   .sectionHeader {
@@ -787,8 +909,104 @@
     padding: 1rem;
   }
 
+  .protocolStats {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
   .progressCardContent {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .categoryItem {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .categoryStats {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .categoryXp {
+    align-self: flex-end;
+  }
+
+  .slimeBody {
+    width: 70px;
+    height: 55px;
+  }
+
+  .pieSvg {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    overflow-x: hidden;
+  }
+
+  .mainContent {
+    padding: 0.75rem 0.25rem;
+    min-width: 0;
+  }
+
+  .filterContainer {
+    padding: 0.4375rem;
+  }
+
+  .filterLabel {
+    font-size: 0.6875rem;
+  }
+
+  .filterSelect {
+    height: 2rem;
+    font-size: 0.8125rem;
+  }
+
+  .tabTrigger {
+    padding: 0.4375rem;
+    font-size: 0.6875rem;
+    gap: 0.25rem;
+  }
+
+  .tabIcon {
+    height: 0.625rem;
+    width: 0.625rem;
+  }
+
+  .metricContent {
+    padding: 0.875rem;
+  }
+
+  .metricValue {
+    font-size: 1.25rem;
+  }
+
+  .categoryItem {
+    padding: 0.625rem;
+  }
+
+  .slimeBody {
+    width: 60px;
+    height: 45px;
+  }
+
+  .pieSvg {
+    width: 120px;
+    height: 120px;
+  }
+
+  .chartLegend {
+    min-width: 120px;
+  }
+
+  .legendLabel,
+  .legendValue {
+    font-size: 0.75rem;
   }
 }
 
@@ -1164,6 +1382,7 @@
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 2rem;
 }
 
 .analyticsHeader {
@@ -1204,24 +1423,40 @@
   padding: 1.5rem;
 }
 
-.chartsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  align-items: start;
-}
-
-.mainChart,
-.detailChart {
+.chartsContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
 }
 
-.detailChart {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
+.chartsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.protocolDetailChart {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  animation: slideIn 0.3s ease-out;
+  width: 100%;
+  max-width: 400px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .chartTitle {
@@ -1230,6 +1465,13 @@
   color: var(--color-foreground);
   margin: 0;
   text-align: center;
+}
+
+.chartSubtitle {
+  font-size: 0.875rem;
+  color: var(--color-muted-foreground);
+  text-align: center;
+  margin: 0;
 }
 
 .pieChartContainer {
