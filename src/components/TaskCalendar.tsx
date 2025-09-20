@@ -21,22 +21,40 @@ export function TaskCalendar({ tasks, onTaskClick, onDateClick }: TaskCalendarPr
   const [selectedTask, setSelectedTask] = useState<(Task & { color: string }) | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  // Convert tasks to calendar events
-  const calendarEvents = tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    start: task.dueDate || new Date().toISOString().split('T')[0],
-    backgroundColor: task.color,
-    borderColor: task.color,
-    textColor: '#ffffff',
-    extendedProps: {
-      task,
-      difficulty: task.difficulty,
-      protocol: task.protocol,
-      status: task.status,
-      xpReward: task.xpReward
+  // Helper function to get color based on exploreCategory
+  const getCategoryColor = (exploreCategory?: string) => {
+    switch (exploreCategory) {
+      case 'protocol':
+        return '#6366f1' // Indigo
+      case 'social':
+        return '#10b981' // Emerald
+      case 'irl':
+        return '#f59e0b' // Amber
+      default:
+        return '#6b7280' // Gray
     }
-  }))
+  }
+
+  // Convert tasks to calendar events
+  const calendarEvents = tasks.map(task => {
+    const categoryColor = getCategoryColor(task.exploreCategory)
+    return {
+      id: task.id,
+      title: task.title,
+      start: task.startDate,
+      backgroundColor: categoryColor,
+      borderColor: categoryColor,
+      textColor: '#ffffff',
+      extendedProps: {
+        task,
+        difficulty: task.difficulty,
+        protocol: task.protocol,
+        status: task.status,
+        xpReward: task.xpReward,
+        exploreCategory: task.exploreCategory
+      }
+    }
+  })
 
   const handleEventClick = (clickInfo: any) => {
     const task = clickInfo.event.extendedProps.task
