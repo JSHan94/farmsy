@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react"
-import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Star, Zap, Shield, Coins, Heart, Users2, Camera, Droplets } from "lucide-react"
+import { BarChart3, TrendingUp, Target, Clock, Award, Calendar, Activity, Zap, Heart, Users2, Camera, Droplets } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
@@ -16,7 +16,7 @@ export function Analytics() {
   const { currentXP, currentLevel, xpForNextLevel } = useXPSystem(150, 2)
   const [timeRange, setTimeRange] = useState('7d')
   const [activeTab, setActiveTab] = useState('overview')
-  const [characterImage, setCharacterImage] = useState('/cat1.png')
+  const [characterImage, setCharacterImage] = useState('/otter1.mp4')
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
 
   const stats = getTaskStatistics()
@@ -36,6 +36,22 @@ export function Analytics() {
       }
       return acc
     }, {} as Record<string, any>)
+
+    // Create explore category stats (Protocol, IRL, Social)
+    const exploreCategories = ['protocol', 'irl', 'social'].map(category => {
+      const categoryTasks = tasks.filter(task => task.exploreCategory === category)
+      const completedTasks = categoryTasks.filter(task => task.status === 'done')
+
+      return {
+        category,
+        stats: {
+          total: categoryTasks.length,
+          completed: completedTasks.length,
+          xpEarned: completedTasks.reduce((sum, task) => sum + (task.xpReward || 0), 0)
+        },
+        completedTasks
+      }
+    })
 
     const categoryStats = tasks.reduce((acc, task) => {
       const category = task.category || 'other'
@@ -79,6 +95,7 @@ export function Analytics() {
     return {
       protocolStats,
       categoryStats,
+      exploreCategories,
       difficultyStats,
       recentCompletions,
       totalXpEarned,
@@ -135,19 +152,21 @@ export function Analytics() {
                   </CardHeader>
                   <CardContent className={styles.historyContent}>
                     <div className={styles.categoryGrid}>
-                      {Object.entries(analyticsData.categoryStats).map(([category, stats]) => {
+                      {analyticsData.exploreCategories.map((categoryData) => {
+                        const { category, stats, completedTasks } = categoryData
                         const categoryIcon = {
-                          lending: Coins,
-                          dex: TrendingUp,
-                          staking: Shield,
-                          farming: Star,
-                          trading: BarChart3,
-                          other: Target
+                          protocol: Target,
+                          irl: Heart,
+                          social: Users2
                         }[category] || Target
                         const IconComponent = categoryIcon
 
                         return (
-                          <div key={category} className={styles.categoryItem}>
+                          <div
+                            key={category}
+                            className={styles.categoryItem}
+                            title={`Hover to see completed ${category} tasks`}
+                          >
                             <div className={styles.categoryHeader}>
                               <div className={styles.categoryIconWrapper}>
                                 <IconComponent className={styles.categoryIcon} />
@@ -167,6 +186,39 @@ export function Analytics() {
                                   className={styles.categoryProgressBar}
                                   style={{ width: `${stats.total > 0 ? Math.round((stats.completed / stats.total) * 100) : 0}%` }}
                                 />
+                              </div>
+                            </div>
+
+                            {/* Hover overlay showing completed tasks */}
+                            <div className={styles.categoryHoverOverlay}>
+                              <div className={styles.hoverContent}>
+                                <h5 className={styles.hoverTitle}>Completed {category.charAt(0).toUpperCase() + category.slice(1)} Tasks</h5>
+                                <div className={styles.hoverTaskList}>
+                                  {completedTasks.length > 0 ? (
+                                    completedTasks.slice(0, 5).map((task) => (
+                                      <div key={task.id} className={styles.hoverTaskItem}>
+                                        <div className={styles.hoverTaskInfo}>
+                                          <span className={styles.hoverTaskTitle}>{task.title}</span>
+                                          <span className={styles.hoverTaskProtocol}>{task.protocol}</span>
+                                        </div>
+                                        <div className={styles.hoverTaskXp}>
+                                          <Award className={styles.hoverXpIcon} />
+                                          <span>+{task.xpReward}</span>
+                                        </div>
+                                      </div>
+                                    ))
+                                  ) : (
+                                    <div className={styles.noTasksMessage}>
+                                      <Activity className={styles.noTasksIcon} />
+                                      <span>No completed tasks yet</span>
+                                    </div>
+                                  )}
+                                  {completedTasks.length > 5 && (
+                                    <div className={styles.moreTasksIndicator}>
+                                      +{completedTasks.length - 5} more tasks
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -192,9 +244,11 @@ export function Analytics() {
                   <CardContent className={styles.characterContent}>
                     <div className={styles.characterImage}>
                       <div className={styles.characterImageWrapper}>
-                        <img
+                        <video
                           src={characterImage}
-                          alt="Character"
+                          autoPlay
+                          loop
+                          muted
                           className={styles.characterImg}
                         />
                         <button
@@ -204,25 +258,29 @@ export function Analytics() {
                         >
                           <Camera className={styles.editIcon} />
                         </button>
+
+                        {/* XP Hover Overlay */}
+                        <div className={styles.xpHoverOverlay}>
+                          <div className={styles.xpOverlayContent}>
+                            <div className={styles.xpDisplay}>
+                              <Zap className={styles.xpIcon} />
+                              <span className={styles.xpText}>{currentXP} / {currentXP + xpForNextLevel} XP</span>
+                            </div>
+                            <div className={styles.xpProgressBar}>
+                              <div
+                                className={styles.xpProgressFill}
+                                style={{
+                                  width: `${Math.max(0, Math.min(100, (currentXP / (currentXP + xpForNextLevel)) * 100))}%`
+                                }}
+                              />
+                            </div>
+                            <p className={styles.nextLevelText}>{xpForNextLevel} XP to level {currentLevel + 1}</p>
+                          </div>
+                        </div>
                       </div>
                       <div className={styles.levelBadgeContainer}>
                         <div className={styles.levelBadgeOverlay}>Lv. {currentLevel}</div>
                       </div>
-                    </div>
-                    <div className={styles.characterProgress}>
-                      <div className={styles.xpDisplay}>
-                        <Zap className={styles.xpIcon} />
-                        <span className={styles.xpText}>{currentXP} / {currentXP + xpForNextLevel} XP</span>
-                      </div>
-                      <div className={styles.xpProgressBar}>
-                        <div
-                          className={styles.xpProgressFill}
-                          style={{
-                            width: `${Math.max(0, Math.min(100, (currentXP / (currentXP + xpForNextLevel)) * 100))}%`
-                          }}
-                        />
-                      </div>
-                      <p className={styles.nextLevelText}>{xpForNextLevel} XP to level {currentLevel + 1}</p>
                     </div>
                   </CardContent>
                 </Card>

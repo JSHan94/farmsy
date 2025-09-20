@@ -1,10 +1,12 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 import type { Task } from "../types/blockchain"
 import { getAllTasks, enrichTasksWithProtocolData } from "../utils/blockchain"
-import { useXPSystem } from "../components/XPProgressBar"
+import { usePersistence, usePersistedXPSystem } from "./PersistenceContext"
 
 // Get all tasks from all blockchains and enrich with protocol data
-const initialTasks: (Task & { color: string })[] = enrichTasksWithProtocolData(getAllTasks())
+const getInitialTasks = (): (Task & { color: string })[] => {
+  return enrichTasksWithProtocolData(getAllTasks())
+}
 
 interface TaskContextType {
   tasks: (Task & { color: string })[]
@@ -28,8 +30,22 @@ interface TaskContextType {
 const TaskContext = createContext<TaskContextType | undefined>(undefined)
 
 export function TaskProvider({ children }: { children: React.ReactNode }) {
-  const [tasks, setTasks] = useState<(Task & { color: string })[]>(initialTasks)
-  const { gainXP } = useXPSystem(150, 2)
+  const { persistTasks, getPersistedTasks } = usePersistence()
+  const { gainXP } = usePersistedXPSystem()
+
+  // Initialize tasks from persisted data or default data
+  const [tasks, setTasks] = useState<(Task & { color: string })[]>(() => {
+    const persisted = getPersistedTasks()
+    if (persisted.length > 0) {
+      return enrichTasksWithProtocolData(persisted)
+    }
+    return getInitialTasks()
+  })
+
+  // Persist tasks whenever they change
+  useEffect(() => {
+    persistTasks(tasks)
+  }, [tasks, persistTasks])
 
   const addTask = (newTask: Omit<Task, 'id'>) => {
     const enrichedTasks = enrichTasksWithProtocolData([{

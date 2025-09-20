@@ -1,7 +1,9 @@
 // Base types for blockchain and protocol system
 export type BlockchainId = 'sui' | 'ethereum' | 'solana' | 'polygon' | 'arbitrum'
 
-export type TaskStatus = 'backlog' | 'todo' | 'doing' | 'done'
+export type TaskStatus = 'backlog' | 'todo' | 'doing' | 'done' | 'available'
+
+export type ExploreCategory = 'protocol' | 'social' | 'irl'
 
 export type ProtocolCategory =
   | 'lending'
@@ -14,6 +16,11 @@ export type ProtocolCategory =
   | 'gaming'
   | 'nft'
   | 'dao'
+  | 'social'
+  | 'storage'
+  | 'competition'
+  | 'events'
+  | 'education'
 
 export type TaskDifficulty = 'easy' | 'medium' | 'hard'
 
@@ -50,6 +57,7 @@ export interface Task {
   order?: number
   xpReward: number
   difficulty: TaskDifficulty
+  exploreCategory?: ExploreCategory // For categorizing explore tasks
 }
 
 export interface BlockchainData {

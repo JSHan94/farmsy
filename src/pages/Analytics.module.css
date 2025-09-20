@@ -1089,6 +1089,7 @@
 }
 
 .categoryItem {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -1096,10 +1097,17 @@
   background: var(--color-muted);
   border-radius: 0.75rem;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .categoryItem:hover {
   background: rgba(59, 130, 246, 0.05);
+}
+
+.categoryItem:hover .categoryHoverOverlay {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .categoryHeader {
@@ -1226,7 +1234,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  height: 100%;
+  justify-content: center;
 }
 
 .characterImage {
@@ -1234,6 +1244,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
 /* Slime Character Placeholder */
@@ -1316,9 +1327,9 @@
 /* Character Image Wrapper */
 .characterImageWrapper {
   position: relative;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
+  width: 350px;
+  height: 350px;
+  border-radius: 1rem;
   overflow: hidden;
   border: 3px solid #e5e7eb;
   background: white;
@@ -1335,7 +1346,7 @@
 .characterImg {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -1428,6 +1439,83 @@
 .nextLevelText {
   font-size: 0.75rem;
   color: var(--color-muted-foreground);
+  margin: 0;
+}
+
+/* XP Hover Overlay */
+.xpHoverOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.characterImageWrapper:hover .xpHoverOverlay {
+  opacity: 1;
+  visibility: visible;
+}
+
+.xpOverlayContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  color: white;
+  text-align: center;
+  width: 80%;
+}
+
+.xpHoverOverlay .xpDisplay {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+}
+
+.xpHoverOverlay .xpIcon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #fbbf24;
+}
+
+.xpHoverOverlay .xpText {
+  font-size: 1rem;
+  color: white;
+}
+
+.xpHoverOverlay .xpProgressBar {
+  width: 100%;
+  height: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.xpHoverOverlay .xpProgressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 0.375rem;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+}
+
+.xpHoverOverlay .nextLevelText {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
   margin: 0;
 }
 
@@ -1630,6 +1718,11 @@
     gap: 1rem;
   }
 
+  .characterImageWrapper {
+    width: 160px;
+    height: 160px;
+  }
+
   .slimePlaceholder {
     width: 100px;
     height: 80px;
@@ -1685,6 +1778,11 @@
     align-self: flex-end;
   }
 
+  .characterImageWrapper {
+    width: 140px;
+    height: 140px;
+  }
+
   .slimePlaceholder {
     width: 80px;
     height: 65px;
@@ -1695,6 +1793,28 @@
     height: 50px;
   }
 
+  .xpOverlayContent {
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .xpHoverOverlay .xpDisplay {
+    font-size: 0.875rem;
+  }
+
+  .xpHoverOverlay .xpIcon {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .xpHoverOverlay .xpText {
+    font-size: 0.875rem;
+  }
+
+  .xpHoverOverlay .xpProgressBar {
+    height: 0.625rem;
+  }
+
   .pieSvg {
     width: 140px;
     height: 140px;
@@ -1703,6 +1823,117 @@
   .chartsGrid {
     gap: 1rem;
   }
+}
+
+/* Category Hover Overlay */
+.categoryHoverOverlay {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.hoverContent {
+  padding: 1rem;
+}
+
+.hoverTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin: 0 0 0.75rem 0;
+  text-align: center;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.5rem;
+}
+
+.hoverTaskList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hoverTaskItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 0.5rem;
+  transition: background 0.15s ease;
+}
+
+.hoverTaskItem:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.hoverTaskInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1;
+}
+
+.hoverTaskTitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-foreground);
+}
+
+.hoverTaskProtocol {
+  font-size: 0.625rem;
+  color: var(--color-muted-foreground);
+}
+
+.hoverTaskXp {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3b82f6;
+}
+
+.hoverXpIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.noTasksMessage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  color: var(--color-muted-foreground);
+}
+
+.noTasksIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.5;
+}
+
+.moreTasksIndicator {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-muted-foreground);
+  padding: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  margin-top: 0.25rem;
 }
 
 /* Performance optimizations */

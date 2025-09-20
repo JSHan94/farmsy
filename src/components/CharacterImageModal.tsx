@@ -9,12 +9,20 @@ interface CharacterImageModalProps {
   currentImage: string
 }
 
+interface MediaOption {
+  path: string
+  name: string
+  type: 'video' | 'image'
+}
+
 export function CharacterImageModal({ isOpen, onClose, onImageSelect, currentImage }: CharacterImageModalProps) {
   const [selectedImage, setSelectedImage] = useState(currentImage)
 
-  const availableImages = [
-    { path: '/cat1.png', name: 'Cat 1' },
-    { path: '/cat2.png', name: 'Cat 2' }
+  const availableImages: MediaOption[] = [
+    { path: '/otter1.mp4', name: 'Otter 1', type: 'video' },
+    { path: '/otter2.mp4', name: 'Otter 2', type: 'video' },
+    { path: '/cat1.png', name: 'Cat 1', type: 'image' },
+    { path: '/cat2.png', name: 'Cat 2', type: 'image' }
   ]
 
   const handleImageSelect = (imagePath: string) => {
@@ -44,7 +52,7 @@ export function CharacterImageModal({ isOpen, onClose, onImageSelect, currentIma
 
         <div className={styles.modalBody}>
           <p className={styles.modalDescription}>
-            Select an image for your character:
+            Select a character for your profile:
           </p>
 
           <div className={styles.imageGrid}>
@@ -55,11 +63,21 @@ export function CharacterImageModal({ isOpen, onClose, onImageSelect, currentIma
                 onClick={() => handleImageSelect(image.path)}
               >
                 <div className={styles.imageWrapper}>
-                  <img
-                    src={image.path}
-                    alt={image.name}
-                    className={styles.characterImage}
-                  />
+                  {image.type === 'video' ? (
+                    <video
+                      src={image.path}
+                      autoPlay
+                      loop
+                      muted
+                      className={styles.characterImage}
+                    />
+                  ) : (
+                    <img
+                      src={image.path}
+                      alt={image.name}
+                      className={styles.characterImage}
+                    />
+                  )}
                   {selectedImage === image.path && (
                     <div className={styles.selectedOverlay}>
                       <div className={styles.checkmark}>✓</div>

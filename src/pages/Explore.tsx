@@ -5,10 +5,10 @@ import { Input } from "../components/Input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { ExploreTaskCard, type ExploreTask } from "../components/ExploreTaskCard"
 import { useTaskContext } from "../contexts/TaskContext"
-import exploreTasksData from "../data/exploreTasks.json"
+import { type Task, type ExploreCategory } from "../types/blockchain"
 import styles from './Explore.module.css'
 
-type CategoryType = 'all' | 'protocol' | 'social' | 'irl'
+type CategoryType = 'all' | ExploreCategory
 
 interface CategoryInfo {
   id: CategoryType
@@ -49,21 +49,59 @@ const categories: CategoryInfo[] = [
   }
 ]
 
+// Helper function to get protocol icons
+const getProtocolIcon = (protocol: string): string => {
+  const icons: Record<string, string> = {
+    'Overtake': '🔄',
+    'Scallop': '🐚',
+    'Walrus': '🐋',
+    'Cetus': '🐋',
+    'Haedal': '/logo-sui.png',
+    'Kriya': '📈',
+    'Momentum': '🚀',
+    'Bluefin': '🌊',
+    'Twitter': '🐦',
+    'Discord': '💬',
+    'Telegram': '✈️',
+    'Hackathon': '💻',
+    'Meetup': '🤝',
+    'Conference': '🎤',
+    'Workshop': '🛠️',
+    'Networking': '🌐',
+    'Validator': '⚡'
+  }
+  return icons[protocol] || '🔗'
+}
+
+// Helper function to get task logo
+const getTaskLogo = (task: Task): string => {
+  if (task.category === 'social') return getProtocolIcon(task.protocol)
+  if (task.exploreCategory === 'irl') return getProtocolIcon(task.protocol)
+  return getProtocolIcon(task.protocol)
+}
+
 export function Explore() {
-  const { addTask } = useTaskContext()
+  const { tasks, updateTask } = useTaskContext()
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [addedTasks, setAddedTasks] = useState<Set<string>>(new Set())
   const [animatingTasks, setAnimatingTasks] = useState<Set<string>>(new Set())
 
-  // Flatten all tasks from the JSON data
+  // Get all available tasks (explore tasks) from TaskContext
   const allExploreTasks: ExploreTask[] = useMemo(() => {
-    const tasks: ExploreTask[] = []
-    Object.entries(exploreTasksData.categories).forEach(([_, categoryData]) => {
-      tasks.push(...categoryData.tasks)
-    })
     return tasks
-  }, [])
+      .filter(task => task.status === 'available')
+      .map(task => ({
+        id: task.id,
+        name: task.title,
+        description: task.description,
+        droplets: task.xpReward,
+        logo: getTaskLogo(task),
+        protocol: task.protocol,
+        active: true,
+        category: task.exploreCategory || 'protocol'
+      }))
+  }, [tasks])
 
   // Filter tasks based on category and search
   const filteredTasks = useMemo(() => {
@@ -109,23 +147,15 @@ export function Explore() {
     // Start animation
     setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
 
-    // Convert explore task to dashboard task format
-    const newTask = {
-      title: exploreTask.name,
-      description: exploreTask.description,
-      protocol: exploreTask.protocol as any, // Type assertion for now
-      category: exploreTask.category,
-      difficulty: exploreTask.droplets <= 5 ? 'easy' as const :
-                  exploreTask.droplets <= 15 ? 'medium' as const : 'hard' as const,
-      xpReward: exploreTask.droplets,
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
-      blockchain: 'sui' as const,
-      status: 'backlog' as const
-    }
+    // Find the original task in TaskContext
+    const originalTask = tasks.find(task => task.id === exploreTask.id)
+    if (!originalTask) return
 
-    // Add task to global state
-    addTask(newTask)
+    // Update the task status from 'available' to 'backlog'
+    const updatedTask = { ...originalTask, status: 'backlog' as const }
+
+    // Update the existing task instead of adding a new one
+    updateTask(updatedTask)
 
     // After animation completes, remove from visible tasks
     setTimeout(() => {

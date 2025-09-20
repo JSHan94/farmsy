@@ -3,21 +3,24 @@ import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar"
 import { AppSidebar } from "./components/AppSidebar"
 import { WalletConnect } from "./components/WalletConnect"
 import { WalletGuard } from "./components/WalletGuard"
-import { DropletsDisplay, useXPSystem } from "./components/XPProgressBar"
+import { AutoReconnect } from "./components/AutoReconnect"
+import { DropletsDisplay } from "./components/XPProgressBar"
 import { useCurrentAccount } from '@mysten/dapp-kit'
 import { TaskProvider } from "./contexts/TaskContext"
+import { PersistenceProvider, usePersistedXPSystem } from "./contexts/PersistenceContext"
 import { Dashboard } from "./pages/Dashboard"
 import { Explore } from "./pages/Explore"
 import { Analytics } from "./pages/Analytics"
 import { Settings } from "./pages/Settings"
 import styles from './App.module.css'
 
-export default function App() {
-  const { currentXP, currentLevel } = useXPSystem(150, 2) // Starting with some XP for demo
+function AppContent() {
+  const { currentXP, currentLevel } = usePersistedXPSystem()
   const currentAccount = useCurrentAccount()
 
   return (
     <TaskProvider>
+      <AutoReconnect />
       <SidebarProvider>
         <div className={styles.appContainer}>
           <AppSidebar />
@@ -53,5 +56,13 @@ export default function App() {
         </div>
       </SidebarProvider>
     </TaskProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <PersistenceProvider>
+      <AppContent />
+    </PersistenceProvider>
   )
 }
