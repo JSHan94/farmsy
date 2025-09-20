@@ -5,8 +5,16 @@ import { jwtDecode } from 'jwt-decode'
 
 // Configuration
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
-const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL || ''
+const REDIRECT_URL = import.meta.env.VITE_REDIRECT_URL || getDefaultRedirectUrl()
 const MAX_EPOCH = 10 // epochs to extend the ephemeral key pair
+
+/**
+ * Get default redirect URL based on environment
+ */
+function getDefaultRedirectUrl(): string {
+  const baseUrl = window.location.origin
+  return `${baseUrl}/auth/callback`
+}
 
 // Types
 export interface ZkLoginUserInfo {
