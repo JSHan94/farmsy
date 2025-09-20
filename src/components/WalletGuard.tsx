@@ -25,7 +25,6 @@ export function WalletGuard({ children }: WalletGuardProps) {
             <div className={styles.iconContainer}>
               <Wallet className={styles.walletIcon} />
             </div>
-            <h2 className={styles.title}>Connect Your Wallet</h2>
             <div className={styles.buttonContainer}>
               <ConnectButton
                 connectText="Connect Wallet"

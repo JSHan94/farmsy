@@ -24,48 +24,61 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 60px 20px 20px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
 .connectCard {
-  background: hsl(var(--card));
-  border: 3px solid hsl(var(--primary));
-  border-radius: 20px;
-  padding: 50px;
-  max-width: 500px;
+  background: linear-gradient(
+    145deg,
+    hsl(var(--card)) 0%,
+    hsl(var(--card) / 0.98) 100%
+  );
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 16px;
+  padding: 20px 24px;
+  max-width: 400px;
   width: 100%;
   text-align: center;
   box-shadow:
-    0 30px 60px -15px rgba(0, 0, 0, 0.4),
+    0 8px 32px -8px rgba(0, 0, 0, 0.3),
     0 0 0 1px rgba(255, 255, 255, 0.1),
-    0 0 50px rgba(var(--primary), 0.2);
-  animation: slideIn 0.4s ease-out;
+    0 0 40px rgba(var(--primary), 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: slideInFromTop 0.4s ease-out;
   position: relative;
   transform: translateZ(0);
   backdrop-filter: blur(20px);
 }
 
-@keyframes slideIn {
+@keyframes slideInFromTop {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-30px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .iconContainer {
   display: flex;
   justify-content: center;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .buttonContainer {
@@ -75,19 +88,46 @@
 }
 
 .walletIcon {
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   color: hsl(var(--primary));
-  filter: drop-shadow(0 4px 8px rgba(var(--primary), 0.3));
+  filter:
+    drop-shadow(0 2px 8px rgba(var(--primary), 0.3))
+    drop-shadow(0 0 16px rgba(var(--primary), 0.2));
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter:
+      drop-shadow(0 4px 12px rgba(var(--primary), 0.4))
+      drop-shadow(0 0 20px rgba(var(--primary), 0.2));
+  }
+  50% {
+    transform: scale(1.05);
+    filter:
+      drop-shadow(0 6px 16px rgba(var(--primary), 0.5))
+      drop-shadow(0 0 30px rgba(var(--primary), 0.3));
+  }
 }
 
 .title {
   font-size: 32px;
   font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--primary) / 0.8) 50%,
+    hsl(var(--foreground)) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: hsl(var(--foreground));
   margin: 0 0 32px 0;
   letter-spacing: -0.02em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 8px rgba(var(--primary), 0.3);
 }
 
 .description {
@@ -103,12 +143,13 @@
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .overlay {
-    padding: 16px;
+    padding: 40px 16px 16px 16px;
   }
 
   .connectCard {
-    padding: 32px 24px;
+    padding: 16px 20px;
     max-width: 380px;
+    border-radius: 12px;
   }
 
   .title {
@@ -117,11 +158,15 @@
 
   .description {
     font-size: 15px;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
   }
 
   .walletIcon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .iconContainer {
+    margin-bottom: 12px;
   }
 }

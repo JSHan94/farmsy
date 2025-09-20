@@ -86,6 +86,8 @@ export function Explore() {
   const [searchQuery, setSearchQuery] = useState('')
   const [addedTasks, setAddedTasks] = useState<Set<string>>(new Set())
   const [animatingTasks, setAnimatingTasks] = useState<Set<string>>(new Set())
+  const [animationCounter, setAnimationCounter] = useState(0)
+  const [successTasks, setSuccessTasks] = useState<Set<string>>(new Set())
 
   // Get all available tasks (explore tasks) from TaskContext
   const allExploreTasks: ExploreTask[] = useMemo(() => {
@@ -144,8 +146,32 @@ export function Explore() {
   }, [allExploreTasks])
 
   const handleAddToBacklog = (exploreTask: ExploreTask) => {
-    // Start animation
-    setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
+    console.log('🎯 Starting animation for task:', exploreTask.name)
+
+    // Increment counter for stagger effect
+    setAnimationCounter(prev => prev + 1)
+
+    // Add haptic feedback for mobile devices
+    if ('vibrate' in navigator) {
+      navigator.vibrate(50) // Brief haptic feedback
+    }
+
+    // Add immediate success feedback
+    setSuccessTasks(prev => {
+      console.log('✅ Adding success state for:', exploreTask.id)
+      return new Set(prev).add(exploreTask.id)
+    })
+
+    // Start swap animation after success feedback
+    setTimeout(() => {
+      console.log('🚀 Starting swipe animation for:', exploreTask.id)
+      setAnimatingTasks(prev => new Set(prev).add(exploreTask.id))
+      setSuccessTasks(prev => {
+        const newSet = new Set(prev)
+        newSet.delete(exploreTask.id)
+        return newSet
+      })
+    }, 600) // 더 긴 지연으로 성공 애니메이션을 충분히 보여줌
 
     // Find the original task in TaskContext
     const originalTask = tasks.find(task => task.id === exploreTask.id)
@@ -154,18 +180,21 @@ export function Explore() {
     // Update the task status from 'available' to 'backlog'
     const updatedTask = { ...originalTask, status: 'backlog' as const }
 
-    // Update the existing task instead of adding a new one
-    updateTask(updatedTask)
+    // Update task status after success feedback but before main animation
+    setTimeout(() => {
+      updateTask(updatedTask)
+    }, 500)
 
     // After animation completes, remove from visible tasks
     setTimeout(() => {
+      console.log('🏁 Animation complete, removing task:', exploreTask.id)
       setAddedTasks(prev => new Set(prev).add(exploreTask.id))
       setAnimatingTasks(prev => {
         const newSet = new Set(prev)
         newSet.delete(exploreTask.id)
         return newSet
       })
-    }, 600) // Animation duration
+    }, 2500) // Updated to match new animation duration (2.2s + buffer)
   }
 
   return (
@@ -197,7 +226,7 @@ export function Explore() {
               <div className={styles.tasksList}>
                 {filteredTasks.length > 0 ? (
                   filteredTasks
-                    .filter(task => !addedTasks.has(task.id)) // Hide tasks that have been added
+                    .filter(task => !addedTasks.has(task.id) || animatingTasks.has(task.id)) // Keep tasks visible during animation
                     .map((task) => (
                       <ExploreTaskCard
                         key={task.id}
@@ -205,6 +234,7 @@ export function Explore() {
                         onAddToBacklog={handleAddToBacklog}
                         isAdded={addedTasks.has(task.id)}
                         isAnimating={animatingTasks.has(task.id)}
+                        isSuccess={successTasks.has(task.id)}
                       />
                     ))
                 ) : (

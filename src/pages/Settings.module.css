@@ -63,7 +63,7 @@
   display: grid;
   gap: 2rem;
   grid-template-columns: 1fr;
-  max-width: 1200px;
+  max-width: 1600px;
 }
 
 /* Card Styles - Following Dashboard/Explore Pattern */

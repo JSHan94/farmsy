@@ -49,6 +49,17 @@ export function Settings() {
         <div className={styles.settingsGrid}>
           {/* Social Media Connections */}
           <Card className={styles.settingCard}>
+            <CardHeader className={styles.cardHeader}>
+              <div className={styles.cardHeaderContent}>
+                <div className={`${styles.cardIcon} ${styles.cardIconPrimary}`}>
+                  <Twitter />
+                </div>
+                <div>
+                  <CardTitle className={styles.cardTitle}>Social Media Connections</CardTitle>
+                  <p className={styles.cardDescription}>Connect your social media accounts to earn rewards</p>
+                </div>
+              </div>
+            </CardHeader>
             <CardContent className={styles.cardContent}>
               <div className={styles.contentSpace}>
                 {/* Twitter Connection */}

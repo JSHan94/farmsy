@@ -117,7 +117,7 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
   const cursorCenterModifier: Modifier = ({ transform, activatorEvent, draggingNodeRect }) => {
     // Get actual dragging element dimensions if available, otherwise use responsive defaults
     let cardWidth = 280
-    let cardHeight = 180
+    let cardHeight = 120 // Fixed to match TaskCard height
 
     // Use actual dimensions from the dragging element if available
     if (draggingNodeRect) {
@@ -133,6 +133,8 @@ export function TaskBoard({ tasks, onAddTask, onUpdateTask, onMoveTask }: TaskBo
       } else {
         cardWidth = 280 // Matches CSS for desktop
       }
+      // Height remains consistent across all screen sizes
+      cardHeight = 120
     }
 
     // Calculate offset to center card exactly on cursor

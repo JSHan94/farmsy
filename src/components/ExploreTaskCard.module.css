@@ -12,12 +12,15 @@
   margin-bottom: 0;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
+  transform-origin: center bottom;
 }
 
 .taskCard:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.02);
+  border-color: rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(240, 253, 244, 0.5) 100%);
 }
 
 .taskCardInactive {
@@ -183,13 +186,15 @@
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   cursor: pointer;
   background: #3b82f6;
   color: white;
   box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
   min-width: 120px;
+  position: relative;
+  overflow: hidden;
 }
 
 .addButton:hover:not(:disabled) {
@@ -569,35 +574,332 @@
   }
 }
 
-/* Animation for adding to backlog */
+/* Enhanced success feedback animation */
 @keyframes addSuccess {
   0% {
     transform: scale(1);
+    background: #3b82f6;
+  }
+  25% {
+    transform: scale(1.05);
+    background: #10b981;
   }
   50% {
+    transform: scale(1.1);
+    background: #059669;
+  }
+  75% {
     transform: scale(1.05);
+    background: #10b981;
   }
   100% {
     transform: scale(1);
+    background: #10b981;
   }
 }
 
 .addButtonAdded {
-  animation: addSuccess 0.3s ease-out;
+  animation: addSuccess 0.6s ease-out;
+  background: #10b981 !important;
+  color: white !important;
+  border: 1px solid #10b981 !important;
 }
 
-/* Slide-out animation when task is being added to backlog */
-@keyframes slideOutRight {
+/* Tinder 스타일 오른쪽 스와이프 (Like) - 더 천천히, 더 드라마틱하게 */
+@keyframes tinderSwipeRight {
   0% {
-    transform: translateX(0);
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
     opacity: 1;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  5% {
+    transform: translateX(5px) translateY(0) rotate(1deg) scale(1.02);
+    opacity: 1;
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.2);
+  }
+  15% {
+    transform: translateX(20px) translateY(-3px) rotate(3deg) scale(1.05);
+    opacity: 1;
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+  }
+  25% {
+    transform: translateX(40px) translateY(-8px) rotate(5deg) scale(1.03);
+    opacity: 0.98;
+    box-shadow: 0 10px 35px rgba(16, 185, 129, 0.35);
+  }
+  40% {
+    transform: translateX(80px) translateY(-15px) rotate(8deg) scale(1);
+    opacity: 0.92;
+    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+  }
+  55% {
+    transform: translateX(140px) translateY(-25px) rotate(12deg) scale(0.95);
+    opacity: 0.8;
+  }
+  70% {
+    transform: translateX(220px) translateY(-40px) rotate(18deg) scale(0.88);
+    opacity: 0.6;
+  }
+  80% {
+    transform: translateX(320px) translateY(-60px) rotate(25deg) scale(0.8);
+    opacity: 0.4;
+  }
+  90% {
+    transform: translateX(450px) translateY(-85px) rotate(35deg) scale(0.7);
+    opacity: 0.2;
+  }
+  95% {
+    transform: translateX(580px) translateY(-110px) rotate(40deg) scale(0.6);
+    opacity: 0.05;
   }
   100% {
-    transform: translateX(100%);
+    transform: translateX(700px) translateY(-130px) rotate(45deg) scale(0.5);
     opacity: 0;
+    box-shadow: none;
+  }
+}
+
+@keyframes fadeOutWithSlide {
+  0% {
+    transform: translateX(0) rotateY(0deg);
+    opacity: 1;
+    filter: blur(0px);
+  }
+  25% {
+    transform: translateX(20px) rotateY(-5deg);
+    opacity: 0.8;
+    filter: blur(0.5px);
+  }
+  50% {
+    transform: translateX(60px) rotateY(-10deg);
+    opacity: 0.5;
+    filter: blur(1px);
+  }
+  75% {
+    transform: translateX(120px) rotateY(-15deg);
+    opacity: 0.2;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translateX(100%) rotateY(-20deg);
+    opacity: 0;
+    filter: blur(3px);
   }
 }
 
 .taskCardAnimating {
-  animation: slideOutRight 0.6s ease-in-out forwards;
+  animation: tinderSwipeRight 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation-fill-mode: forwards;
+  z-index: 1000;
+  position: relative;
+  overflow: visible;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+  pointer-events: none; /* Prevent interactions during animation */
+}
+
+.taskCardAnimating::after {
+  content: 'ADDED';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(15deg) scale(0);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: #10b981;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+  border: 4px solid #10b981;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  animation: tinderLikeBadge 2.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  will-change: transform, opacity;
+  z-index: 10;
+}
+
+/* Tinder 스타일 LIKE 배지 애니메이션 - 더 천천히, 더 오래 보이게 */
+@keyframes tinderLikeBadge {
+  0% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(0);
+    opacity: 0;
+  }
+  15% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1.3);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1.1);
+    opacity: 1;
+  }
+  35% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1);
+    opacity: 1;
+  }
+  60% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1);
+    opacity: 1;
+  }
+  75% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1.05);
+    opacity: 0.9;
+  }
+  85% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(1);
+    opacity: 0.7;
+  }
+  95% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(0.95);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(15deg) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* Fallback simple animation */
+.taskCardAnimating.simple {
+  animation: simpleSwipeOut 0.8s ease-out forwards;
+}
+
+@keyframes simpleSwipeOut {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateX(0) scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+/* Alternative animation style for variety */
+.taskCardAnimating.altStyle {
+  animation: fadeOutWithSlide 0.7s ease-out forwards;
+}
+
+/* Button click animation with ripple effect */
+@keyframes buttonClickRipple {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.addButton:active {
+  animation: buttonClickRipple 0.2s ease;
+}
+
+/* Adding ripple effect */
+.addButton::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+  z-index: 0;
+}
+
+.addButton:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+.addButton > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Stagger animation delays for multiple tasks */
+.taskCardAnimating:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.taskCardAnimating:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.taskCardAnimating:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.taskCardAnimating:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.taskCardAnimating:nth-child(n+5) {
+  animation-delay: 0.4s;
+}
+
+/* Enhanced success feedback animation on card addition */
+@keyframes successGlow {
+  0% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    background: white;
+  }
+  25% {
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(240, 253, 244, 0.8);
+  }
+  50% {
+    box-shadow: 0 12px 40px rgba(16, 185, 129, 0.4);
+    border-color: rgba(16, 185, 129, 0.6);
+    background: rgba(240, 253, 244, 1);
+    transform: scale(1.02);
+  }
+  75% {
+    box-shadow: 0 8px 32px rgba(16, 185, 129, 0.3);
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(240, 253, 244, 0.8);
+    transform: scale(1.01);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+    background: white;
+    transform: scale(1);
+  }
+}
+
+/* Add success state before animation starts */
+.taskCard.success {
+  animation: successGlow 0.8s ease-in-out;
+}
+
+/* Reduce animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .taskCardAnimating,
+  .taskCardAnimating::after {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+
+  .taskCard.success {
+    animation: none !important;
+  }
+
+  .addButton {
+    animation: none !important;
+  }
+
+  .addButton::before {
+    display: none;
+  }
 }
