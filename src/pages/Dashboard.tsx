@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Calendar, Grid } from "lucide-react"
+import { Calendar, Grid, RotateCcw } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/Tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { TaskBoard } from "../components/TaskBoard"
@@ -119,6 +119,70 @@ export function Dashboard() {
     }
   }
 
+  const handleCompleteAllProtocolTasks = () => {
+    // Find all protocol tasks that are not already done
+    const protocolTasks = filteredTasks.filter(task =>
+      task.exploreCategory === 'protocol' && task.status !== 'done'
+    )
+
+    if (protocolTasks.length === 0) {
+      toast.info("All protocol tasks are already completed!", {
+        duration: 2000,
+        style: {
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          color: 'white',
+          border: 'none'
+        }
+      })
+      return
+    }
+
+    // Calculate total XP to be awarded
+    const totalXP = protocolTasks.reduce((sum, task) => sum + (task.xpReward || 25), 0)
+    const oldLevel = currentLevel
+
+    // Complete all protocol tasks
+    protocolTasks.forEach(task => {
+      moveTask(task.id, 'done', task.status)
+    })
+
+    // Award total XP
+    gainXP(totalXP)
+
+    // Calculate new level after XP gain
+    const newXP = currentXP + totalXP
+    const newLevel = Math.floor(newXP / 100) + 1
+    const xpInCurrentLevel = newXP % 100
+
+    // Show success toast with XP gained
+    toast.success(
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <div style={{ fontWeight: 'bold' }}>
+          ✅ Completed {protocolTasks.length} protocol tasks!
+        </div>
+        <div style={{ fontWeight: 'bold' }}>
+          Gained +{totalXP} XP total!
+        </div>
+        <div style={{ fontSize: '12px', opacity: 0.8 }}>
+          XP: {xpInCurrentLevel}/{100} (level {newLevel})
+        </div>
+        {newLevel > oldLevel && (
+          <div style={{ fontSize: '12px', color: '#fbbf24' }}>
+            🎉 Level Up! You have reached level {newLevel}!
+          </div>
+        )}
+      </div>,
+      {
+        duration: 3000,
+        style: {
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          border: 'none'
+        }
+      }
+    )
+  }
+
   return (
     <div className={styles.container}>
       {/* Main Content */}
@@ -141,6 +205,13 @@ export function Dashboard() {
 
             {/* Category Filter */}
             <div className={styles.filterSection}>
+              <button
+                onClick={handleCompleteAllProtocolTasks}
+                className={styles.refreshButton}
+                title="Complete all protocol tasks"
+              >
+                <RotateCcw className={styles.refreshIcon} />
+              </button>
               <span className={styles.filterLabel}>Filter :</span>
               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                 <SelectTrigger className={styles.filterSelect}>

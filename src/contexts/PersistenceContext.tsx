@@ -9,6 +9,7 @@ interface UserData {
   currentCharacter?: string
   connectedAt?: number
   lastSeen?: number
+  lastClaimedLevel?: number
 }
 
 interface PersistenceContextType {
@@ -270,6 +271,19 @@ export function usePersistedXPSystem() {
   const xpForNextLevel = userData.currentLevel * 100
   const currentCharacter = userData.currentCharacter || getCharacterForLevel(userData.currentLevel).character
 
+  // Check if user can claim (level 2+ and hasn't claimed for current level)
+  const canClaim = userData.currentLevel >= 2 && (userData.lastClaimedLevel || 0) < userData.currentLevel
+
+  const claimReward = () => {
+    if (canClaim) {
+      setUserData({
+        lastClaimedLevel: userData.currentLevel
+      })
+      return true
+    }
+    return false
+  }
+
   return {
     currentXP: userData.currentXP,
     currentLevel: userData.currentLevel,
@@ -278,6 +292,9 @@ export function usePersistedXPSystem() {
     gainXP,
     isConnected,
     levelUpData,
-    closeLevelUpAnimation
+    closeLevelUpAnimation,
+    canClaim,
+    claimReward,
+    lastClaimedLevel: userData.lastClaimedLevel || 0
   }
 }

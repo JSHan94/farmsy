@@ -13,14 +13,65 @@ const protocolConfig = getAllProtocols()
 
 export function Analytics() {
   const { tasks, getTaskStatistics } = useTaskContext()
-  const { currentXP, currentLevel, currentCharacter, xpForNextLevel } = usePersistedXPSystem()
+  const { currentXP, currentLevel, currentCharacter, xpForNextLevel, canClaim: contextCanClaim, claimReward, lastClaimedLevel } = usePersistedXPSystem()
   const [timeRange, setTimeRange] = useState('7d')
   const [activeTab, setActiveTab] = useState('overview')
   const [isImageModalOpen, setIsImageModalOpen] = useState(false)
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
   const [overlayPosition, setOverlayPosition] = useState({ top: 0, left: 0 })
+  const [isClaimAnimating, setIsClaimAnimating] = useState(false)
+  const [claimedAmount, setClaimedAmount] = useState<number | null>(null)
 
   const stats = getTaskStatistics()
+
+  // Calculate level-based SUI rewards (integers)
+  const calculateSUIReward = (level: number) => {
+    // Base reward: level * 2 with exponential scaling for higher levels
+    return Math.floor(level * 2 + Math.pow(level - 1, 1.5))
+  }
+
+  const currentReward = calculateSUIReward(currentLevel)
+  const nextLevelReward = calculateSUIReward(currentLevel + 1)
+
+  // Calculate task breakdown for current level
+  const getTaskBreakdown = () => {
+    const completedTasks = tasks.filter(task => task.status === 'done')
+    const tasksByDifficulty = {
+      easy: completedTasks.filter(task => task.difficulty === 'easy').length,
+      medium: completedTasks.filter(task => task.difficulty === 'medium').length,
+      hard: completedTasks.filter(task => task.difficulty === 'hard').length
+    }
+
+    const rewardBreakdown = {
+      easy: tasksByDifficulty.easy * 1, // 1 SUI per easy task
+      medium: tasksByDifficulty.medium * 2, // 2 SUI per medium task
+      hard: tasksByDifficulty.hard * 4 // 4 SUI per hard task
+    }
+
+    return {
+      tasks: tasksByDifficulty,
+      rewards: rewardBreakdown,
+      total: rewardBreakdown.easy + rewardBreakdown.medium + rewardBreakdown.hard
+    }
+  }
+
+  const taskBreakdown = getTaskBreakdown()
+
+  const handleClaim = () => {
+    if (!contextCanClaim || isClaimAnimating) return
+
+    const success = claimReward()
+    if (success) {
+      setIsClaimAnimating(true)
+      setClaimedAmount(currentReward)
+
+      // Simulate claim animation
+      setTimeout(() => {
+        setIsClaimAnimating(false)
+        setClaimedAmount(null)
+      }, 3000)
+    }
+  }
 
   // Calculate analytics data
   const analyticsData = useMemo(() => {
@@ -376,6 +427,103 @@ export function Analytics() {
                         <div className={styles.levelBadgeOverlay}>Lv. {currentLevel}</div>
                       </div>
                     </div>
+
+                    {/* Claim Section */}
+                    <div className={styles.claimSection}>
+                      <div className={styles.rewardInfo}>
+                        <div className={styles.currentReward}>
+                          <span className={styles.rewardLabel}>Current Level Reward:</span>
+                          <div className={styles.rewardAmountWrapper}>
+                            <div className={styles.rewardAmount}>
+                              <img src="/sui-logo.svg" alt="SUI" className={styles.suiIcon} />
+                              <span>{currentReward} SUI</span>
+                            </div>
+                            <div className={styles.rewardTooltip}>
+                              <div className={styles.tooltipContent}>
+                                <h4 className={styles.tooltipTitle}>Reward Breakdown</h4>
+                                <div className={styles.tooltipBreakdown}>
+                                  <div className={styles.tooltipItem}>
+                                    <span className={styles.tooltipDifficulty}>Easy:</span>
+                                    <span className={styles.tooltipCalc}>{taskBreakdown.tasks.easy} tasks × 1 SUI = {taskBreakdown.rewards.easy} SUI</span>
+                                  </div>
+                                  <div className={styles.tooltipItem}>
+                                    <span className={styles.tooltipDifficulty}>Medium:</span>
+                                    <span className={styles.tooltipCalc}>{taskBreakdown.tasks.medium} tasks × 2 SUI = {taskBreakdown.rewards.medium} SUI</span>
+                                  </div>
+                                  <div className={styles.tooltipItem}>
+                                    <span className={styles.tooltipDifficulty}>Hard:</span>
+                                    <span className={styles.tooltipCalc}>{taskBreakdown.tasks.hard} tasks × 4 SUI = {taskBreakdown.rewards.hard} SUI</span>
+                                  </div>
+                                  <div className={styles.tooltipTotal}>
+                                    <strong>Total: {taskBreakdown.total} SUI</strong>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={styles.nextReward}>
+                          <span className={styles.nextRewardLabel}>Next Level ({currentLevel + 1}):</span>
+                          <span className={styles.nextRewardAmount}>{nextLevelReward} SUI</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={handleClaim}
+                        disabled={!contextCanClaim || isClaimAnimating}
+                        className={`${styles.claimButton} ${!contextCanClaim ? styles.claimButtonDisabled : ''} ${isClaimAnimating ? styles.claimButtonAnimating : ''}`}
+                      >
+                        {isClaimAnimating ? (
+                          <div className={styles.claimingContent}>
+                            <div className={styles.claimSpinner} />
+                            <span>Claiming...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <img src="/sui-logo.svg" alt="SUI" className={styles.claimIcon} />
+                            <span>
+                              {contextCanClaim
+                                ? 'Claim SUI'
+                                : currentLevel < 2
+                                  ? 'Unlock at Level 2'
+                                  : 'Already Claimed'
+                              }
+                            </span>
+                          </>
+                        )}
+                      </button>
+
+                      {!contextCanClaim && (
+                        <p className={styles.claimHint}>
+                          {currentLevel < 2
+                            ? 'Reach level 2 to start claiming SUI rewards!'
+                            : 'Level up to claim more SUI rewards!'
+                          }
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Claim Animation Overlay */}
+                    {claimedAmount && (
+                      <div className={styles.claimAnimation}>
+                        <div className={styles.claimSuccess}>
+                          <img src="/sui-logo.svg" alt="SUI" className={styles.claimSuccessIcon} />
+                          <span className={styles.claimSuccessText}>+{claimedAmount} SUI</span>
+                          <div className={styles.claimParticles}>
+                            {[...Array(8)].map((_, i) => (
+                              <div
+                                key={i}
+                                className={styles.claimParticle}
+                                style={{
+                                  animationDelay: `${i * 0.1}s`,
+                                  transform: `rotate(${i * 45}deg)`
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>

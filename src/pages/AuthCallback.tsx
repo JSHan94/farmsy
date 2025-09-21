@@ -13,8 +13,8 @@ export function AuthCallback() {
       const success = await handleAuthCallback()
 
       if (success) {
-        // Successfully authenticated, redirect to Dashboard
-        navigate('/', { replace: true })
+        // Successfully authenticated, refresh the page to ensure all components update
+        window.location.href = '/'
       } else if (error) {
         // Authentication failed, redirect to home with error
         console.error('Authentication failed:', error)

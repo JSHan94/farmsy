@@ -123,6 +123,45 @@
   flex-shrink: 0;
 }
 
+.refreshButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: white;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  outline: none;
+}
+
+.refreshButton:hover {
+  background: #f8fafc;
+  border-color: #6366f1;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.refreshButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.refreshIcon {
+  width: 1.125rem;
+  height: 1.125rem;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.refreshButton:hover .refreshIcon {
+  color: #6366f1;
+  transform: rotate(-30deg);
+}
+
 .filterLabel {
   font-size: 0.875rem;
   font-weight: 500;
@@ -362,6 +401,16 @@
     min-height: 3.5rem;
   }
 
+  .refreshButton {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .refreshIcon {
+    width: 1rem;
+    height: 1rem;
+  }
+
   .filterSelect {
     width: 10rem;
     min-width: 120px;
@@ -412,12 +461,24 @@
   }
 
   .filterSection {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5rem;
     padding: 0.75rem;
     height: auto;
     text-align: center;
+    justify-content: center;
+  }
+
+  .refreshButton {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+  }
+
+  .refreshIcon {
+    width: 0.875rem;
+    height: 0.875rem;
   }
 
   .filterLabel {

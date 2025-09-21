@@ -18,7 +18,7 @@ export function DropletsDisplay({ currentDroplets, currentLevel }: DropletsDispl
       {/* Droplets Display */}
       <div className={styles.dropletsDisplay}>
         <Droplets className={styles.dropletsIcon} />
-        <span className={styles.dropletsCount}>{currentDroplets}</span>
+        <span className={styles.dropletsCount}>{currentDroplets} droplets</span>
       </div>
     </div>
   )

@@ -42,9 +42,9 @@
           "name": "Momentum",
           "color": "bg-yellow-50 border-yellow-500",
           "brandColor": "#F1C40F",
-          "symbol": "MM",
-          "icon": "/momentum.svg",
-          "category": "farming"
+          "symbol": "MMT",
+          "icon": "/momentum.png",
+          "category": "dex"
         },
         "Scallop": {
           "name": "Scallop",
