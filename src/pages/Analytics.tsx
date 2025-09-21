@@ -113,38 +113,56 @@ export function Analytics() {
     // The character image is now automatically determined by level
   }
 
-  const calculateOverlayPosition = useCallback((element: HTMLElement) => {
-    const rect = element.getBoundingClientRect()
-    const viewportHeight = window.innerHeight
-    const viewportWidth = window.innerWidth
+  const calculateOverlayPosition = useCallback((mouseX: number, mouseY: number) => {
+    // Get the Task History Card boundaries
+    const historyCard = document.querySelector(`.${styles.historyCard}`)
+    if (!historyCard) return { top: 0, left: 0 }
+
+    const cardRect = historyCard.getBoundingClientRect()
     const overlayHeight = 300 // max-height from CSS
     const overlayWidth = 280 // min-width from CSS
+    const offset = 10 // Distance from cursor
+    const padding = 16 // Padding from card edges
 
-    // Calculate optimal position
-    let top = rect.bottom + 8 // Default: below the element
-    let left = rect.left
+    // Convert mouse position to relative position within the card
+    const relativeMouseX = mouseX - cardRect.left
+    const relativeMouseY = mouseY - cardRect.top
 
-    // If overlay would go below viewport, position it above
-    if (top + overlayHeight > viewportHeight) {
-      top = rect.top - overlayHeight - 8
+    // Default position: to the right of cursor (relative to card)
+    let left = relativeMouseX + offset
+    let top = relativeMouseY - overlayHeight / 2 // Center vertically on cursor
+
+    // Card boundaries (relative to card itself)
+    const maxLeft = cardRect.width - overlayWidth - padding
+    const maxTop = cardRect.height - overlayHeight - padding
+    const minLeft = padding
+    const minTop = padding
+
+    // If overlay would go beyond card's right edge, show it to the left of cursor
+    if (left + overlayWidth > cardRect.width - padding) {
+      left = relativeMouseX - overlayWidth - offset
     }
 
-    // If overlay would go beyond right edge, align to right
-    if (left + overlayWidth > viewportWidth) {
-      left = viewportWidth - overlayWidth - 16
+    // Constrain within card boundaries
+    if (left < minLeft) {
+      left = minLeft
+    }
+    if (left > maxLeft) {
+      left = maxLeft
     }
 
-    // Ensure it doesn't go beyond left edge
-    if (left < 16) {
-      left = 16
+    if (top < minTop) {
+      top = minTop
+    }
+    if (top > maxTop) {
+      top = maxTop
     }
 
     return { top, left }
   }, [])
 
   const handleCategoryHover = useCallback((category: string, event: React.MouseEvent<HTMLDivElement>) => {
-    const element = event.currentTarget
-    const position = calculateOverlayPosition(element)
+    const position = calculateOverlayPosition(event.clientX, event.clientY)
     setOverlayPosition(position)
     setHoveredCategory(category)
   }, [calculateOverlayPosition])
@@ -152,6 +170,13 @@ export function Analytics() {
   const handleCategoryLeave = useCallback(() => {
     setHoveredCategory(null)
   }, [])
+
+  const handleMouseMove = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    if (hoveredCategory) {
+      const position = calculateOverlayPosition(event.clientX, event.clientY)
+      setOverlayPosition(position)
+    }
+  }, [hoveredCategory, calculateOverlayPosition])
 
   return (
     <div className={styles.container}>
@@ -180,7 +205,7 @@ export function Analytics() {
               {/* Top Row: Task History & Character Evolution */}
               <div className={styles.topRowGrid}>
                 {/* Task History by Category */}
-                <Card className={styles.historyCard}>
+                <Card className={`${styles.historyCard} ${hoveredCategory ? styles.historyCardActive : ''}`}>
                   <CardHeader className={styles.historyHeader}>
                     <div className={styles.historyHeaderContent}>
                       <div className={styles.historyIconWrapper}>
@@ -195,7 +220,7 @@ export function Analytics() {
                   <CardContent className={styles.historyContent}>
                     <div className={styles.categoryGrid}>
                       {analyticsData.exploreCategories.map((categoryData) => {
-                        const { category, stats, completedTasks } = categoryData
+                        const { category, stats } = categoryData
                         const categoryIcon = {
                           protocol: Target,
                           irl: Heart,
@@ -209,6 +234,7 @@ export function Analytics() {
                             className={styles.categoryItem}
                             title={`Hover to see completed ${category} tasks`}
                             onMouseEnter={(e) => handleCategoryHover(category, e)}
+                            onMouseMove={handleMouseMove}
                             onMouseLeave={handleCategoryLeave}
                           >
                             <div className={styles.categoryHeader}>
@@ -237,21 +263,20 @@ export function Analytics() {
                         )
                       })}
                     </div>
-                  </CardContent>
-
-                  {/* Fixed position overlay for completed tasks */}
-                  {hoveredCategory && (
-                    <div
-                      className={styles.categoryHoverOverlay}
-                      style={{
-                        top: `${overlayPosition.top}px`,
-                        left: `${overlayPosition.left}px`,
-                        opacity: 1,
-                        visibility: 'visible',
-                        transform: 'translateY(0)',
-                        pointerEvents: 'auto'
-                      }}
-                    >
+                    {/* Overlay for completed tasks - positioned absolutely within card */}
+                    {hoveredCategory && (
+                      <div
+                        className={styles.categoryHoverOverlay}
+                        style={{
+                          position: 'absolute',
+                          top: `${overlayPosition.top}px`,
+                          left: `${overlayPosition.left}px`,
+                          opacity: 1,
+                          visibility: 'visible',
+                          transform: 'scale(1)',
+                          pointerEvents: 'auto'
+                        }}
+                      >
                       <div className={styles.hoverContent}>
                         {(() => {
                           const categoryData = analyticsData.exploreCategories.find(c => c.category === hoveredCategory)
@@ -294,6 +319,7 @@ export function Analytics() {
                       </div>
                     </div>
                   )}
+                  </CardContent>
                 </Card>
 
                 {/* Character Evolution Card */}
