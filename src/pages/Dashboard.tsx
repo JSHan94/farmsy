@@ -134,13 +134,13 @@ export function Dashboard() {
   }
 
   const handleCompleteAllProtocolTasks = () => {
-    // Find all protocol tasks that are not already done
+    // Find all protocol tasks that are in "todo" status only
     const protocolTasks = filteredTasks.filter(task =>
-      task.exploreCategory === 'protocol' && task.status !== 'done'
+      task.exploreCategory === 'protocol' && task.status === 'todo'
     )
 
     if (protocolTasks.length === 0) {
-      toast.info("All protocol tasks are already completed!", {
+      toast.info("No protocol tasks in ToDo to complete!", {
         duration: 2000,
         style: {
           background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -178,7 +178,7 @@ export function Dashboard() {
     toast.success(
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         <div style={{ fontWeight: 'bold' }}>
-          ✅ Completed {protocolTasks.length} protocol tasks!
+          ✅ Completed {protocolTasks.length} ToDo protocol tasks!
         </div>
         <div style={{ fontWeight: 'bold' }}>
           Gained +{totalXP} XP total!
@@ -228,7 +228,7 @@ export function Dashboard() {
               <button
                 onClick={handleCompleteAllProtocolTasks}
                 className={styles.refreshButton}
-                title="Complete all protocol tasks"
+                title="Complete all ToDo protocol tasks"
               >
                 <RotateCcw className={styles.refreshIcon} />
               </button>
