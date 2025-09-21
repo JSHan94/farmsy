@@ -21,8 +21,8 @@
         },
         {
           "id": "scallop-task-2",
-          "title": "Create Flash Loan on Scallop",
-          "description": "Execute a flash loan transaction to experience collateral-free borrowing",
+          "title": "Supply Collateral SUI",
+          "description": "Supply SUI as collateral to earn SCA and SUI rewards while enabling borrowing",
           "status": "backlog",
           "blockchain": "sui",
           "protocol": "Scallop",
