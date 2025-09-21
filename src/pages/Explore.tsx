@@ -53,6 +53,7 @@ const getProtocolIcon = (protocol: string): string => {
   const icons: Record<string, string> = {
     'Overtake': '/overtake.png',
     'Scallop': '/scallop.svg',
+    'Momentum': '/momentum.png',
     'Twitter': '🐦',
     'Discord': '💬',
     'Telegram': '✈️',
