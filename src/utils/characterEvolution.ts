@@ -17,7 +17,7 @@ export const CHARACTER_STAGES: CharacterStage[] = [
     unlockMessage: 'Welcome to Suimming! Your journey begins with this adorable young otter.'
   },
   {
-    level: 5,
+    level: 2,
     character: '/otter2.mp4',
     name: 'Wise Otter',
     description: 'An experienced otter with wisdom from completing many tasks',

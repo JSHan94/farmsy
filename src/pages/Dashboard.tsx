@@ -6,6 +6,7 @@ import { TaskBoard } from "../components/TaskBoard"
 import { TaskCalendar } from "../components/TaskCalendar"
 import { TaskCompletionCelebration } from "../components/TaskCompletionCelebration"
 import { PointsAnimationOverlay } from "../components/PointsAnimationOverlay"
+import { LevelUpVideoOverlay } from "../components/LevelUpVideoOverlay"
 import { useTaskContext } from "../contexts/TaskContext"
 import { usePersistedXPSystem } from "../contexts/PersistenceContext"
 import { useDashboard } from "../contexts/DashboardContext"
@@ -22,6 +23,8 @@ export function Dashboard() {
   const [pointsAnimationVisible, setPointsAnimationVisible] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
+  const [levelUpVideoVisible, setLevelUpVideoVisible] = useState(false)
+  const [levelUpNewLevel, setLevelUpNewLevel] = useState(0)
 
   // Filter tasks based on category selection
   const filteredTasks = categoryFilter === 'all'
@@ -45,6 +48,12 @@ export function Dashboard() {
         const newXP = currentXP + xpReward
         const newLevel = Math.floor(newXP / 100) + 1
         const xpInCurrentLevel = newXP % 100
+
+        // Show level up video overlay if leveled up
+        if (newLevel > oldLevel) {
+          setLevelUpVideoVisible(true)
+          setLevelUpNewLevel(newLevel)
+        }
 
         // Show XP gain toast with current progress
         toast.success(
@@ -91,6 +100,11 @@ export function Dashboard() {
   const handlePointsAnimationComplete = () => {
     setPointsAnimationVisible(false)
     setEarnedPoints(0)
+  }
+
+  const handleLevelUpVideoClose = () => {
+    setLevelUpVideoVisible(false)
+    setLevelUpNewLevel(0)
   }
 
   const handleTaskClick = (task: any) => {
@@ -153,6 +167,12 @@ export function Dashboard() {
     const newXP = currentXP + totalXP
     const newLevel = Math.floor(newXP / 100) + 1
     const xpInCurrentLevel = newXP % 100
+
+    // Show level up video overlay if leveled up
+    if (newLevel > oldLevel) {
+      setLevelUpVideoVisible(true)
+      setLevelUpNewLevel(newLevel)
+    }
 
     // Show success toast with XP gained
     toast.success(
@@ -304,6 +324,13 @@ export function Dashboard() {
         isVisible={celebrationVisible}
         taskTitle={completedTaskTitle}
         onComplete={handleCelebrationComplete}
+      />
+
+      {/* Level Up Video Overlay */}
+      <LevelUpVideoOverlay
+        isVisible={levelUpVideoVisible}
+        newLevel={levelUpNewLevel}
+        onClose={handleLevelUpVideoClose}
       />
     </div>
   )

@@ -1,0 +1,222 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease-out;
+  cursor: pointer;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 90vw;
+  max-height: 90vh;
+  cursor: default;
+}
+
+.levelUpText {
+  text-align: center;
+  color: white;
+  z-index: 10;
+  position: relative;
+}
+
+.title {
+  font-size: 4rem;
+  font-weight: 900;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 2s ease-in-out infinite, bounceIn 0.6s ease-out;
+}
+
+.newLevel {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out 0.3s both;
+}
+
+.videoContainer {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: scaleIn 0.8s ease-out 0.5s both;
+}
+
+.video {
+  width: 400px;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+}
+
+.closePrompt {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.sparkles {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.sparkle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: radial-gradient(circle, #ffd700 30%, transparent 70%);
+  border-radius: 50%;
+  animation: sparkleFloat 3s ease-in-out infinite;
+  animation-delay: var(--delay);
+  transform: rotate(var(--angle)) translateX(250px);
+}
+
+.sparkle:nth-child(odd) {
+  background: radial-gradient(circle, #ffed4e 30%, transparent 70%);
+}
+
+.sparkle:nth-child(even) {
+  background: radial-gradient(circle, #ffa500 30%, transparent 70%);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes sparkleFloat {
+  0%, 100% {
+    opacity: 0;
+    transform: rotate(var(--angle)) translateX(200px) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(var(--angle)) translateX(300px) scale(1);
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+
+  .newLevel {
+    font-size: 1.5rem;
+  }
+
+  .video {
+    width: 300px;
+    height: 225px;
+  }
+
+  .sparkle {
+    transform: rotate(var(--angle)) translateX(150px);
+  }
+
+  @keyframes sparkleFloat {
+    0%, 100% {
+      opacity: 0;
+      transform: rotate(var(--angle)) translateX(120px) scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: rotate(var(--angle)) translateX(180px) scale(1);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .newLevel {
+    font-size: 1.2rem;
+  }
+
+  .video {
+    width: 250px;
+    height: 188px;
+  }
+}
