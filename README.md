@@ -2,6 +2,7 @@
 
 You don't know what to do on Sui? Do suimming!
 
+**🚀 Landing Page:** [suimmingotter.my.canva.site](https://suimmingotter.my.canva.site/)
 **🌐 Demo:** [farmsy.vercel.app](https://farmsy.vercel.app)
 
 ## Overview
